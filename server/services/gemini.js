@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import config from "../config.js";
 import { toolDeclarations, executeToolCall } from "./tools.js";
+import logger from "./logger.js";
 
 const SYSTEM_INSTRUCTION = `You are "Eco-Pulse", an expert Climate Strategist AI designed to protect farmers' livelihoods.
 
@@ -52,6 +53,7 @@ export async function analyzeField({
   cropInfo = "",
   phone = "",
   language = "English",
+  analysisId = "",
 }) {
   // Build the multimodal content parts
   const parts = [];
@@ -117,8 +119,8 @@ export async function analyzeField({
       const functionResponses = [];
 
       for (const call of response.functionCalls) {
-        console.log(`🔧 Gemini requested tool: ${call.name}`);
-        const result = await executeToolCall(call.name, call.args);
+        logger.info(`Gemini requested tool: ${call.name}`, { tool: call.name, args: call.args });
+        const result = await executeToolCall(call.name, call.args, analysisId);
         actions.push({
           tool: call.name,
           args: call.args,
@@ -156,7 +158,7 @@ export async function analyzeField({
       finalAnalysis = response.text || "";
     }
   } catch (error) {
-    console.error("Gemini API error:", error.message);
+    logger.error("Gemini API error", { error: error.message, analysisId });
     throw new Error(`Analysis failed: ${error.message}`);
   }
 

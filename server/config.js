@@ -15,6 +15,11 @@ const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   geminiApiKey: required('GEMINI_API_KEY'),
   weatherApiKey: process.env.OPENWEATHERMAP_API_KEY || '',
+
+  // Google Cloud Platform
+  gcpProjectId: process.env.GCP_PROJECT_ID || '',
+  gcsBucket: process.env.GCS_BUCKET || '',
+
   cors: {
     origin: process.env.CORS_ORIGIN || '*',
   },

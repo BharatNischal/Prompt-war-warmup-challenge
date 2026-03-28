@@ -7,6 +7,9 @@
   'use strict';
 
   let selectedFiles = [];
+  let voiceBlob = null;
+  let mediaRecorder = null;
+  let recordingTimer = null;
 
   // ── DOM References ────────────────────────────────
   const form = document.getElementById('analyze-form');
@@ -66,6 +69,61 @@
   });
 
 
+  // ── Voice Recording ──────────────────────────────
+
+  const recordBtn = document.getElementById('record-btn');
+  const recordLabel = document.getElementById('record-label');
+  const voiceIcon = document.getElementById('voice-icon');
+  const voiceTimer = document.getElementById('voice-timer');
+  const voicePreview = document.getElementById('voice-preview');
+
+  recordBtn?.addEventListener('click', async () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      // Stop recording
+      mediaRecorder.stop();
+      recordBtn.classList.remove('recording');
+      recordLabel.textContent = 'Tap to Record';
+      voiceIcon.textContent = '🎤';
+      clearInterval(recordingTimer);
+      EcoA11y.announce('Recording stopped.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const chunks = [];
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        voiceBlob = new Blob(chunks, { type: 'audio/webm' });
+        voicePreview.src = URL.createObjectURL(voiceBlob);
+        voicePreview.style.display = 'block';
+        stream.getTracks().forEach(t => t.stop());
+        EcoA11y.announce('Voice memo recorded. Preview is available.');
+      };
+
+      mediaRecorder.start();
+      recordBtn.classList.add('recording');
+      recordLabel.textContent = 'Stop Recording';
+      voiceIcon.textContent = '⏹️';
+
+      // Timer
+      let seconds = 0;
+      recordingTimer = setInterval(() => {
+        seconds++;
+        const min = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const sec = (seconds % 60).toString().padStart(2, '0');
+        voiceTimer.textContent = `${min}:${sec}`;
+      }, 1000);
+
+      EcoA11y.announce('Recording started. Speak your sensor readings or observations.');
+    } catch {
+      EcoUI.showToast('Microphone access denied. Please allow microphone permissions.', 'error');
+    }
+  });
+
+
   // ── Form Submission ───────────────────────────────
 
   form?.addEventListener('submit', async (e) => {
@@ -75,8 +133,8 @@
     const sensorData = document.getElementById('sensor-data')?.value?.trim();
     const cropInfo = document.getElementById('crop-info')?.value?.trim();
 
-    if (selectedFiles.length === 0 && !sensorData && !cropInfo) {
-      EcoUI.showToast('Please provide at least one input: images, sensor data, or crop info.', 'error');
+    if (selectedFiles.length === 0 && !sensorData && !cropInfo && !voiceBlob) {
+      EcoUI.showToast('Please provide at least one input: images, sensor data, crop info, or voice memo.', 'error');
       EcoA11y.announce('Form validation failed. Please provide at least one input.', 'assertive');
       return;
     }
@@ -86,6 +144,11 @@
 
     for (const file of selectedFiles) {
       formData.append('fieldImages', file);
+    }
+
+    // Add voice note if recorded
+    if (voiceBlob) {
+      formData.append('voiceNote', voiceBlob, 'voice-memo.webm');
     }
 
     const fields = ['latitude', 'longitude', 'cropInfo', 'sensorData', 'phone', 'language'];
@@ -162,6 +225,17 @@
     // Render weather
     if (result.weather) {
       EcoUI.renderWeather(result.weather);
+    }
+
+    // Render voice alert audio if available
+    const audioContainer = document.getElementById('audio-alert-container');
+    const alertAudio = document.getElementById('alert-audio');
+    if (result.actions) {
+      const voiceAction = result.actions.find(a => a.tool === 'send_voice_alert' && a.result?.audio_url);
+      if (voiceAction && audioContainer && alertAudio) {
+        alertAudio.src = voiceAction.result.audio_url;
+        audioContainer.style.display = 'block';
+      }
     }
 
     // Show results section
