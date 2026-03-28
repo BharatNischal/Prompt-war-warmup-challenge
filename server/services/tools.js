@@ -1,7 +1,13 @@
 /**
  * Tool declarations for Gemini Function Calling.
  * These define the "actions" that Gemini can trigger as a Climate Strategist.
+ *
+ * In production, voice alerts use Google Cloud Text-to-Speech to generate
+ * real audio in the farmer's local language, stored in Cloud Storage.
  */
+
+import { synthesizeSpeech } from './tts.js';
+import logger from './logger.js';
 
 export const toolDeclarations = [
   {
@@ -43,7 +49,8 @@ export const toolDeclarations = [
         name: 'send_voice_alert',
         description:
           'Sends an automated voice call to the farmer in their local language with critical, ' +
-          'personalized weather and harvest guidance. Call this for urgent, time-sensitive alerts ' +
+          'personalized weather and harvest guidance. Uses Google Cloud Text-to-Speech to generate ' +
+          'audio in the farmer\'s native language. Call this for urgent, time-sensitive alerts ' +
           'that the farmer needs to act on immediately.',
         parameters: {
           type: 'object',
@@ -77,19 +84,20 @@ export const toolDeclarations = [
 
 /**
  * Executes a tool call returned by Gemini.
- * In production, these would call real warehouse APIs and Twilio/TTS services.
- * Here they are realistic mock implementations for demonstration.
+ * Voice alerts now use Google Cloud Text-to-Speech for real audio generation.
+ * Warehouse reservations remain as realistic mock for demonstration.
  *
  * @param {string} name - Tool function name
  * @param {object} args - Arguments from Gemini
+ * @param {string} [analysisId] - Analysis session ID for file naming
  * @returns {Promise<object>} Execution result
  */
-export async function executeToolCall(name, args) {
+export async function executeToolCall(name, args, analysisId = '') {
   switch (name) {
     case 'reserve_warehouse_space':
       return reserveWarehouseSpace(args);
     case 'send_voice_alert':
-      return sendVoiceAlert(args);
+      return sendVoiceAlert(args, analysisId);
     default:
       return { error: `Unknown tool: ${name}` };
   }
@@ -102,13 +110,13 @@ export async function executeToolCall(name, args) {
 async function reserveWarehouseSpace(args) {
   const confirmationId = `WH-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 
-  console.log(`🏭 [WAREHOUSE RESERVATION]`);
-  console.log(`   Crop: ${args.crop_type}`);
-  console.log(`   Quantity: ${args.quantity_kg} kg`);
-  console.log(`   Urgency: ${args.urgency_level}`);
-  console.log(`   Confirmation: ${confirmationId}`);
+  logger.info('Warehouse space reserved', {
+    crop: args.crop_type,
+    quantity: args.quantity_kg,
+    urgency: args.urgency_level,
+    confirmationId,
+  });
 
-  // Simulate processing delay
   await new Promise((r) => setTimeout(r, 200));
 
   return {
@@ -126,19 +134,26 @@ async function reserveWarehouseSpace(args) {
 }
 
 /**
- * Mock voice alert.
- * Simulates sending a TTS voice call via Twilio or GCP TTS.
+ * Send voice alert using Google Cloud Text-to-Speech.
+ * Generates real audio in the farmer's local language, uploads to Cloud Storage,
+ * and returns a playable audio URL.
  */
-async function sendVoiceAlert(args) {
+async function sendVoiceAlert(args, analysisId) {
   const callId = `CALL-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 
-  console.log(`📞 [VOICE ALERT]`);
-  console.log(`   To: ${args.phone_number}`);
-  console.log(`   Language: ${args.language}`);
-  console.log(`   Severity: ${args.alert_severity || 'INFO'}`);
-  console.log(`   Message: "${args.message_text}"`);
+  logger.info('Voice alert triggered', {
+    phone: args.phone_number,
+    language: args.language,
+    severity: args.alert_severity || 'INFO',
+    callId,
+  });
 
-  await new Promise((r) => setTimeout(r, 200));
+  // Generate real audio using Google Cloud TTS
+  const ttsResult = await synthesizeSpeech(
+    args.message_text,
+    args.language,
+    analysisId,
+  );
 
   return {
     success: true,
@@ -149,6 +164,9 @@ async function sendVoiceAlert(args) {
     message_delivered: args.message_text,
     status: 'DELIVERED',
     timestamp: new Date().toISOString(),
+    // Real TTS audio URL (if Cloud TTS is configured)
+    audio_url: ttsResult.audioUrl || null,
+    audio_generated: ttsResult.audioGenerated,
     message: `Voice alert sent to ${args.phone_number} in ${args.language}. Call ID: ${callId}`,
   };
 }
