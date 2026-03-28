@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getWeatherForecast } from '../services/weather.js';
 import { isValidLatitude, isValidLongitude } from '../utils/validators.js';
+import logger from '../services/logger.js';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
     const forecast = await getWeatherForecast(parseFloat(lat), parseFloat(lon));
     res.json(forecast);
   } catch (error) {
-    console.error('Weather route error:', error.message);
+    logger.error('Weather route error', { error: error.message });
     res.status(502).json({ error: 'Failed to fetch weather data' });
   }
 });
