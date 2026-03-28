@@ -41,6 +41,7 @@ export default [
         EcoUI: 'writable',
         EcoAPI: 'writable',
         EcoA11y: 'writable',
+        EcoConstants: 'readonly',
         console: 'readonly',
         setTimeout: 'readonly',
         setInterval: 'readonly',

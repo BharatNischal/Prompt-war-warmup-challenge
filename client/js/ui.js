@@ -1,19 +1,42 @@
 /**
- * UI helpers for Eco-Pulse: toast notifications, loading states,
- * risk gauge, weather rendering, and action cards.
+ * Eco-Pulse — UI Rendering Module
+ * Handles toast notifications, loading states, risk gauge,
+ * weather rendering, action cards, and upload previews.
+ *
+ * @namespace EcoUI
  */
 
 const EcoUI = (() => {
-  /* ── Toast Notifications ──────────────────────────── */
+  'use strict';
+
+  const { TOAST, WEATHER_ICONS } = EcoConstants;
+
+  /* ── HTML Sanitization ─────────────────────────────── */
 
   /**
-   * Show a toast notification.
-   * @param {string} message
-   * @param {'info'|'success'|'error'} type
-   * @param {number} duration - ms before auto-dismiss
+   * Escape HTML entities to prevent XSS in dynamically rendered content.
+   * @param {string} str - Raw string
+   * @returns {string} Escaped HTML-safe string
    */
-  function showToast(message, type = 'info', duration = 5000) {
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ── Toast Notifications ───────────────────────────── */
+
+  /**
+   * Show a toast notification with auto-dismiss.
+   * @param {string} message - Notification text
+   * @param {'info'|'success'|'error'} type - Toast severity
+   * @param {number} [duration] - Auto-dismiss delay in ms
+   */
+  function showToast(message, type = TOAST.TYPE_INFO, duration = TOAST.DEFAULT_DURATION_MS) {
     const container = document.getElementById('toast-container');
+    if (!container) return;
+
     const toast = document.createElement('div');
     toast.className = `toast toast--${type}`;
     toast.textContent = message;
@@ -23,28 +46,30 @@ const EcoUI = (() => {
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(40px)';
-      toast.style.transition = 'all 0.3s ease-out';
-      setTimeout(() => toast.remove(), 300);
+      toast.style.transition = `all ${TOAST.FADE_OUT_MS}ms ease-out`;
+      setTimeout(() => toast.remove(), TOAST.FADE_OUT_MS);
     }, duration);
   }
 
-  /* ── Loading Overlay ──────────────────────────────── */
+  /* ── Loading Overlay ───────────────────────────────── */
 
   const loadingOverlay = document.getElementById('loading-overlay');
   let releaseFocusTrap = null;
 
+  /** Show the loading overlay and trap focus for accessibility. */
   function showLoading() {
     loadingOverlay?.classList.add('visible');
-    // Reset steps
+    // Reset all step indicators
     document.querySelectorAll('#loading-steps li').forEach((li) => {
       li.classList.remove('active', 'done');
     });
-    // Trap focus in overlay
+    // Trap focus inside the overlay for screen readers
     if (window.EcoA11y && loadingOverlay) {
       releaseFocusTrap = window.EcoA11y.trapFocus(loadingOverlay);
     }
   }
 
+  /** Hide the loading overlay and release focus trap. */
   function hideLoading() {
     loadingOverlay?.classList.remove('visible');
     if (releaseFocusTrap) {
@@ -54,11 +79,11 @@ const EcoUI = (() => {
   }
 
   /**
-   * Advance the loading step indicator.
-   * @param {string} stepId - e.g., 'step-compress'
+   * Advance the loading step indicator to the given step.
+   * Marks all preceding steps as done.
+   * @param {string} stepId - DOM id of the target step element
    */
   function setLoadingStep(stepId) {
-    // Mark all previous steps as done
     const steps = document.querySelectorAll('#loading-steps li');
     let found = false;
     steps.forEach((li) => {
@@ -73,36 +98,37 @@ const EcoUI = (() => {
     });
   }
 
-  /* ── Risk Gauge ───────────────────────────────────── */
+  /* ── Risk Gauge ────────────────────────────────────── */
+
+  /** Risk level visual configuration */
+  const RISK_CONFIG = Object.freeze({
+    LOW: { color: 'var(--success)', percent: '25%' },
+    MEDIUM: { color: 'var(--warning)', percent: '50%' },
+    HIGH: { color: 'var(--danger)', percent: '75%' },
+    CRITICAL: { color: 'var(--danger)', percent: '95%' },
+  });
 
   /**
-   * Update the risk gauge display.
-   * @param {'LOW'|'MEDIUM'|'HIGH'|'CRITICAL'} level
+   * Update the circular risk gauge display.
+   * @param {'LOW'|'MEDIUM'|'HIGH'|'CRITICAL'} level - Risk assessment level
    */
   function updateRiskGauge(level) {
     const circle = document.getElementById('risk-circle');
     const levelEl = document.getElementById('risk-level');
     if (!circle || !levelEl) return;
 
-    const config = {
-      LOW: { color: 'var(--success)', percent: '25%', text: 'LOW' },
-      MEDIUM: { color: 'var(--warning)', percent: '50%', text: 'MEDIUM' },
-      HIGH: { color: 'var(--danger)', percent: '75%', text: 'HIGH' },
-      CRITICAL: { color: 'var(--danger)', percent: '95%', text: 'CRITICAL' },
-    };
-
-    const c = config[level] || config.MEDIUM;
-    circle.style.setProperty('--gauge-color', c.color);
-    circle.style.setProperty('--gauge-percent', c.percent);
-    levelEl.textContent = c.text;
-    levelEl.style.color = c.color;
+    const cfg = RISK_CONFIG[level] || RISK_CONFIG.MEDIUM;
+    circle.style.setProperty('--gauge-color', cfg.color);
+    circle.style.setProperty('--gauge-percent', cfg.percent);
+    levelEl.textContent = level;
+    levelEl.style.color = cfg.color;
   }
 
-  /* ── Render Actions ───────────────────────────────── */
+  /* ── Render Actions ────────────────────────────────── */
 
   /**
    * Render action cards from Gemini function call results.
-   * @param {Array} actions
+   * @param {Array<{tool: string, args: object, result: object}>} actions
    */
   function renderActions(actions) {
     const container = document.getElementById('actions-container');
@@ -121,60 +147,65 @@ const EcoUI = (() => {
       card.className = 'action-card';
 
       if (action.tool === 'reserve_warehouse_space') {
-        card.innerHTML = `
-          <div class="action-card__icon" style="background: var(--success-dim);">🏭</div>
-          <div class="action-card__content">
-            <div class="action-card__title">Warehouse Space Reserved</div>
-            <div class="action-card__detail">
-              <span class="action-card__badge action-card__badge--success">✅ Confirmed</span><br>
-              <strong>Crop:</strong> ${escapeHtml(action.result?.crop_type || 'N/A')}<br>
-              <strong>Quantity:</strong> ${action.result?.reserved_capacity_kg || 0} kg<br>
-              <strong>ID:</strong> ${escapeHtml(action.result?.confirmation_id || 'N/A')}<br>
-              <strong>Valid until:</strong> ${action.result?.valid_until ? new Date(action.result.valid_until).toLocaleDateString() : 'N/A'}
-            </div>
-          </div>
-        `;
+        card.innerHTML = createWarehouseCard(action.result);
       } else if (action.tool === 'send_voice_alert') {
-        card.innerHTML = `
-          <div class="action-card__icon" style="background: var(--warning-dim);">📞</div>
-          <div class="action-card__content">
-            <div class="action-card__title">Voice Alert Sent</div>
-            <div class="action-card__detail">
-              <span class="action-card__badge action-card__badge--warning">${escapeHtml(action.result?.alert_severity || 'INFO')}</span><br>
-              <strong>To:</strong> ${escapeHtml(action.result?.phone_number || 'N/A')}<br>
-              <strong>Language:</strong> ${escapeHtml(action.result?.language || 'N/A')}<br>
-              <strong>Message:</strong> "${escapeHtml(action.result?.message_delivered || 'N/A')}"
-            </div>
-          </div>
-        `;
+        card.innerHTML = createVoiceAlertCard(action.result);
       }
 
       container.appendChild(card);
     }
   }
 
-  /* ── Render Weather ───────────────────────────────── */
+  /**
+   * Generate warehouse reservation card HTML.
+   * @param {object} result - Tool call result
+   * @returns {string} Sanitized HTML
+   */
+  function createWarehouseCard(result = {}) {
+    const validUntil = result.valid_until
+      ? new Date(result.valid_until).toLocaleDateString()
+      : 'N/A';
 
-  const weatherIcons = {
-    'clear sky': '☀️',
-    'few clouds': '🌤️',
-    'scattered clouds': '⛅',
-    'broken clouds': '☁️',
-    'overcast clouds': '☁️',
-    'shower rain': '🌧️',
-    rain: '🌧️',
-    'light rain': '🌦️',
-    'moderate rain': '🌧️',
-    'heavy intensity rain': '⛈️',
-    thunderstorm: '⛈️',
-    snow: '❄️',
-    mist: '🌫️',
-    haze: '🌫️',
-  };
+    return `
+      <div class="action-card__icon" style="background: var(--success-dim);">🏭</div>
+      <div class="action-card__content">
+        <div class="action-card__title">Warehouse Space Reserved</div>
+        <div class="action-card__detail">
+          <span class="action-card__badge action-card__badge--success">✅ Confirmed</span><br>
+          <strong>Crop:</strong> ${escapeHtml(result.crop_type || 'N/A')}<br>
+          <strong>Quantity:</strong> ${result.reserved_capacity_kg || 0} kg<br>
+          <strong>ID:</strong> ${escapeHtml(result.confirmation_id || 'N/A')}<br>
+          <strong>Valid until:</strong> ${validUntil}
+        </div>
+      </div>
+    `;
+  }
 
   /**
-   * Render weather forecast strip.
-   * @param {object} weatherData
+   * Generate voice alert card HTML.
+   * @param {object} result - Tool call result
+   * @returns {string} Sanitized HTML
+   */
+  function createVoiceAlertCard(result = {}) {
+    return `
+      <div class="action-card__icon" style="background: var(--warning-dim);">📞</div>
+      <div class="action-card__content">
+        <div class="action-card__title">Voice Alert Sent</div>
+        <div class="action-card__detail">
+          <span class="action-card__badge action-card__badge--warning">${escapeHtml(result.alert_severity || 'INFO')}</span><br>
+          <strong>To:</strong> ${escapeHtml(result.phone_number || 'N/A')}<br>
+          <strong>Language:</strong> ${escapeHtml(result.language || 'N/A')}<br>
+          <strong>Message:</strong> "${escapeHtml(result.message_delivered || 'N/A')}"
+        </div>
+      </div>
+    `;
+  }
+
+  /* ── Render Weather ────────────────────────────────── */
+
+  /**
+   * Render the weather forecast horizontal strip.
+   * @param {object} weatherData - Weather response with forecast array
    */
   function renderWeather(weatherData) {
     const strip = document.getElementById('weather-strip');
@@ -187,13 +218,12 @@ const EcoUI = (() => {
     }
 
     strip.innerHTML = '';
-    // Show first 8 intervals (24 hours)
     const items = (weatherData.forecast || []).slice(0, 8);
 
     for (const f of items) {
       const time = f.datetime ? f.datetime.split(' ')[1]?.slice(0, 5) : '';
       const date = f.datetime ? f.datetime.split(' ')[0]?.slice(5) : '';
-      const icon = weatherIcons[f.description] || '🌡️';
+      const icon = WEATHER_ICONS[f.description] || '🌡️';
 
       const item = document.createElement('div');
       item.className = 'weather-item';
@@ -207,17 +237,17 @@ const EcoUI = (() => {
     }
   }
 
-  /* ── Render Analysis Text ─────────────────────────── */
+  /* ── Render Analysis Text ──────────────────────────── */
 
   /**
-   * Render the Gemini analysis text with basic markdown-like formatting.
-   * @param {string} text
+   * Render the Gemini analysis text with basic markdown formatting.
+   * Safely escapes HTML before applying bold syntax.
+   * @param {string} text - Raw analysis text from Gemini
    */
   function renderAnalysis(text) {
     const container = document.getElementById('analysis-text');
     if (!container) return;
 
-    // Basic formatting: bold (**text**)
     let formatted = escapeHtml(text);
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     formatted = formatted.replace(/\n/g, '<br>');
@@ -225,8 +255,9 @@ const EcoUI = (() => {
     container.innerHTML = formatted;
   }
 
-  /* ── Show/Hide Results ────────────────────────────── */
+  /* ── Show/Hide Results ─────────────────────────────── */
 
+  /** Reveal the results section and scroll it into view. */
   function showResults() {
     const section = document.getElementById('results-section');
     if (section) {
@@ -235,12 +266,13 @@ const EcoUI = (() => {
     }
   }
 
-  /* ── Upload Previews ──────────────────────────────── */
+  /* ── Upload Previews ───────────────────────────────── */
 
   /**
-   * Render image preview thumbnails.
-   * @param {FileList|File[]} files
-   * @param {function} onRemove - Called with index when remove button clicked
+   * Render image preview thumbnails with remove buttons.
+   * Uses URL.createObjectURL for efficient previews and cleans up on load.
+   * @param {File[]} files - Selected image files
+   * @param {function} onRemove - Callback invoked with file index on removal
    */
   function renderUploadPreviews(files, onRemove) {
     const container = document.getElementById('upload-previews');
@@ -271,14 +303,7 @@ const EcoUI = (() => {
     });
   }
 
-  /* ── Helpers ──────────────────────────────────────── */
-
-  function escapeHtml(str) {
-    if (typeof str !== 'string') return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  /* ── Public API ────────────────────────────────────── */
 
   return {
     showToast,

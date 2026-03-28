@@ -2,27 +2,18 @@
  * Google Cloud Speech-to-Text service for Eco-Pulse.
  * Enables farmers to send voice memos instead of typing sensor data.
  * Supports Indian languages for maximum accessibility.
+ *
+ * @module services/speech
  */
 
 import speech from '@google-cloud/speech';
 import config from '../config.js';
 import logger from './logger.js';
+import { LANGUAGE_MAP, STT } from '../constants.js';
 
 let speechClient = null;
 
-// Language code mapping for speech recognition
-const SPEECH_LANGUAGE_MAP = {
-  English: 'en-IN',
-  Hindi: 'hi-IN',
-  Tamil: 'ta-IN',
-  Telugu: 'te-IN',
-  Bengali: 'bn-IN',
-  Marathi: 'mr-IN',
-  Kannada: 'kn-IN',
-  Punjabi: 'pa-IN',
-};
-
-// Initialize Speech client
+// Initialize Speech client when GCP project is configured
 if (config.gcpProjectId) {
   try {
     speechClient = new speech.SpeechClient({
@@ -38,15 +29,15 @@ if (config.gcpProjectId) {
  * Transcribe an audio buffer to text using Cloud Speech-to-Text.
  * @param {Buffer} audioBuffer - Audio file buffer
  * @param {string} [language='English'] - Language for recognition
- * @param {string} [encoding='WEBM_OPUS'] - Audio encoding
- * @param {number} [sampleRate=48000] - Sample rate in Hz
+ * @param {string} [encoding] - Audio encoding (default from constants)
+ * @param {number} [sampleRate] - Sample rate in Hz (default from constants)
  * @returns {Promise<{ transcript: string, confidence: number, transcribed: boolean }>}
  */
 export async function transcribeAudio(
   audioBuffer,
   language = 'English',
-  encoding = 'WEBM_OPUS',
-  sampleRate = 48000,
+  encoding = STT.ENCODING,
+  sampleRate = STT.SAMPLE_RATE_HZ,
 ) {
   if (!speechClient) {
     logger.debug('Speech-to-Text not available, returning empty transcript');
@@ -58,7 +49,8 @@ export async function transcribeAudio(
     };
   }
 
-  const languageCode = SPEECH_LANGUAGE_MAP[language] || 'en-IN';
+  const langConfig = LANGUAGE_MAP[language];
+  const languageCode = langConfig?.code || 'en-IN';
 
   try {
     const [response] = await speechClient.recognize({
@@ -68,34 +60,10 @@ export async function transcribeAudio(
         sampleRateHertz: sampleRate,
         languageCode,
         enableAutomaticPunctuation: true,
-        model: 'latest_long',
+        model: STT.MODEL,
         useEnhanced: true,
-        // Enable word-level confidence for quality assessment
         enableWordConfidence: true,
-        // Agricultural domain hints
-        speechContexts: [
-          {
-            phrases: [
-              'soil moisture',
-              'humidity',
-              'temperature',
-              'rainfall',
-              'rice',
-              'wheat',
-              'cotton',
-              'sugarcane',
-              'harvest',
-              'cyclone',
-              'flood',
-              'drought',
-              'irrigation',
-              'fertilizer',
-              'pesticide',
-              'yield',
-              'acres',
-            ],
-          },
-        ],
+        speechContexts: [{ phrases: STT.AGRICULTURAL_HINTS }],
       },
     });
 

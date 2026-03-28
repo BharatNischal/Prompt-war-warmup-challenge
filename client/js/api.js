@@ -1,20 +1,27 @@
 /**
- * API client for communicating with the Eco-Pulse backend.
+ * Eco-Pulse — API Client
+ * Handles all communication with the backend REST API.
+ * Uses EcoConstants for endpoint URLs and error handling.
+ *
+ * @namespace EcoAPI
  */
 
 const EcoAPI = (() => {
-  const BASE = ''; // Same origin
+  'use strict';
+
+  const { API } = EcoConstants;
 
   /**
-   * Submit field data for analysis.
-   * @param {FormData} formData - Multipart form data with images and fields
-   * @returns {Promise<object>} Analysis result
+   * Submit field data for multimodal AI analysis.
+   * @param {FormData} formData - Multipart form data with images, audio, and metadata
+   * @returns {Promise<object>} Structured analysis result
+   * @throws {Error} On HTTP error or network failure
    */
   async function analyze(formData) {
-    const response = await fetch(`${BASE}/api/analyze`, {
+    const response = await fetch(API.ANALYZE, {
       method: 'POST',
       body: formData,
-      // Don't set Content-Type — browser sets it with boundary for multipart
+      // Content-Type header deliberately omitted — browser sets multipart boundary automatically
     });
 
     if (!response.ok) {
@@ -26,13 +33,14 @@ const EcoAPI = (() => {
   }
 
   /**
-   * Fetch weather forecast for coordinates.
-   * @param {number} lat
-   * @param {number} lon
-   * @returns {Promise<object>}
+   * Fetch weather forecast for geographic coordinates.
+   * @param {number} lat - Latitude (-90 to 90)
+   * @param {number} lon - Longitude (-180 to 180)
+   * @returns {Promise<object>} Weather forecast data
+   * @throws {Error} On HTTP error
    */
   async function getWeather(lat, lon) {
-    const response = await fetch(`${BASE}/api/weather?lat=${lat}&lon=${lon}`);
+    const response = await fetch(`${API.WEATHER}?lat=${lat}&lon=${lon}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch weather');
@@ -42,15 +50,29 @@ const EcoAPI = (() => {
   }
 
   /**
-   * Health check.
-   * @returns {Promise<object>}
+   * Server health check — verifies backend connectivity.
+   * @returns {Promise<object>} Health status with timestamp
    */
   async function healthCheck() {
-    const response = await fetch(`${BASE}/api/health`);
+    const response = await fetch(API.HEALTH);
     return response.json();
   }
 
-  return { analyze, getWeather, healthCheck };
+  /**
+   * Retrieve analysis history from Firestore.
+   * @param {object} [options]
+   * @param {number} [options.limit=10] - Max results to return
+   * @returns {Promise<object>} Array of past analyses
+   */
+  async function getHistory({ limit = 10 } = {}) {
+    const response = await fetch(`${API.HISTORY}?limit=${limit}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch history');
+    }
+    return response.json();
+  }
+
+  return { analyze, getWeather, healthCheck, getHistory };
 })();
 
 window.EcoAPI = EcoAPI;

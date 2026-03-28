@@ -1,22 +1,25 @@
+/**
+ * File upload middleware using Multer.
+ * Validates file types against centralized constants and enforces size limits.
+ *
+ * @module middleware/upload
+ */
+
 import multer from 'multer';
 import config from '../config.js';
+import { UPLOAD } from '../constants.js';
 
-const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
-
-const AUDIO_TYPES = [
-  'audio/webm',
-  'audio/ogg',
-  'audio/wav',
-  'audio/mp3',
-  'audio/mpeg',
-  'audio/mp4',
-  'audio/x-m4a',
-];
-
-const ALLOWED_TYPES = [...IMAGE_TYPES, ...AUDIO_TYPES];
+/** Combined list of all accepted MIME types */
+const ALLOWED_TYPES = [...UPLOAD.ALLOWED_IMAGE_TYPES, ...UPLOAD.ALLOWED_AUDIO_TYPES];
 
 const storage = multer.memoryStorage();
 
+/**
+ * Multer file filter — rejects uploads with unsupported MIME types.
+ * @param {import('express').Request} _req
+ * @param {Express.Multer.File} file
+ * @param {multer.FileFilterCallback} cb
+ */
 const fileFilter = (_req, file, cb) => {
   if (ALLOWED_TYPES.includes(file.mimetype)) {
     cb(null, true);
@@ -30,6 +33,6 @@ export const upload = multer({
   fileFilter,
   limits: {
     fileSize: config.upload.maxFileSize,
-    files: config.upload.maxFiles + 1, // +1 for voice note
+    files: config.upload.maxFiles + UPLOAD.MAX_VOICE_COUNT, // +1 for voice note
   },
 });

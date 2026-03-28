@@ -1,29 +1,20 @@
 /**
  * Google Cloud Text-to-Speech service for Eco-Pulse.
  * Generates real audio alerts in the farmer's local language.
- * Falls back to mock if TTS is unavailable.
+ * Falls back to mock response if TTS is unavailable.
+ *
+ * @module services/tts
  */
 
 import textToSpeech from '@google-cloud/text-to-speech';
 import config from '../config.js';
 import logger from './logger.js';
 import { uploadAudio } from './storage.js';
+import { LANGUAGE_MAP, TTS } from '../constants.js';
 
 let ttsClient = null;
 
-// Language code mapping for supported Indian languages
-const LANGUAGE_MAP = {
-  English: { code: 'en-IN', name: 'en-IN-Wavenet-B', gender: 'MALE' },
-  Hindi: { code: 'hi-IN', name: 'hi-IN-Wavenet-A', gender: 'FEMALE' },
-  Tamil: { code: 'ta-IN', name: 'ta-IN-Wavenet-A', gender: 'FEMALE' },
-  Telugu: { code: 'te-IN', name: 'te-IN-Standard-A', gender: 'FEMALE' },
-  Bengali: { code: 'bn-IN', name: 'bn-IN-Wavenet-A', gender: 'FEMALE' },
-  Marathi: { code: 'mr-IN', name: 'mr-IN-Wavenet-A', gender: 'FEMALE' },
-  Kannada: { code: 'kn-IN', name: 'kn-IN-Wavenet-A', gender: 'FEMALE' },
-  Punjabi: { code: 'pa-IN', name: 'pa-IN-Wavenet-A', gender: 'FEMALE' },
-};
-
-// Initialize TTS client
+// Initialize TTS client when GCP project is configured
 if (config.gcpProjectId) {
   try {
     ttsClient = new textToSpeech.TextToSpeechClient({
@@ -38,11 +29,11 @@ if (config.gcpProjectId) {
 /**
  * Synthesize speech from text using Google Cloud TTS.
  * @param {string} text - The alert message to convert to speech
- * @param {string} language - Language name (e.g., 'Telugu', 'Hindi')
- * @param {string} analysisId - Analysis session ID for file naming
+ * @param {string} [language] - Language name (e.g., 'Telugu', 'Hindi')
+ * @param {string} [analysisId] - Analysis session ID for file naming
  * @returns {Promise<{ audioUrl: string | null, audioGenerated: boolean }>}
  */
-export async function synthesizeSpeech(text, language = 'English', analysisId = '') {
+export async function synthesizeSpeech(text, language = TTS.DEFAULT_LANGUAGE, analysisId = '') {
   if (!ttsClient) {
     logger.debug('TTS not available, returning mock audio response');
     return {
@@ -59,14 +50,14 @@ export async function synthesizeSpeech(text, language = 'English', analysisId = 
       input: { text },
       voice: {
         languageCode: langConfig.code,
-        name: langConfig.name,
+        name: langConfig.ttsVoice,
         ssmlGender: langConfig.gender,
       },
       audioConfig: {
-        audioEncoding: 'MP3',
-        speakingRate: 0.9, // Slightly slower for clarity
-        pitch: 0,
-        effectsProfileId: ['telephony-class-application'], // Optimized for phone calls
+        audioEncoding: TTS.AUDIO_ENCODING,
+        speakingRate: TTS.SPEAKING_RATE,
+        pitch: TTS.PITCH,
+        effectsProfileId: [TTS.EFFECTS_PROFILE],
       },
     });
 
