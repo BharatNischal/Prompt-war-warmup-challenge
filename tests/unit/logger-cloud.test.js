@@ -23,9 +23,7 @@ describe('Logger — cloud write & fallback paths', () => {
   });
 
   it('writes to Cloud Logging when cloudLogger is set (lines 42-45)', async () => {
-    const { default: logger, _setCloudLogger } = await import(
-      '../../server/services/logger.js'
-    );
+    const { default: logger, _setCloudLogger } = await import('../../server/services/logger.js');
 
     const mockWrite = vi.fn().mockResolvedValue();
     const mockEntry = vi.fn().mockReturnValue({ data: 'entry' });
@@ -42,9 +40,7 @@ describe('Logger — cloud write & fallback paths', () => {
   });
 
   it('falls back to console.log when cloud write fails (lines 46-48)', async () => {
-    const { default: logger, _setCloudLogger } = await import(
-      '../../server/services/logger.js'
-    );
+    const { default: logger, _setCloudLogger } = await import('../../server/services/logger.js');
 
     _setCloudLogger({
       entry: vi.fn().mockReturnValue({}),

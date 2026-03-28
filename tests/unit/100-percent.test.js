@@ -42,10 +42,18 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcsBucket: 'test-bucket', gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('@google-cloud/storage', () => ({
-        Storage: vi.fn().mockImplementation(() => { throw new Error('boom'); }),
+        Storage: vi.fn().mockImplementation(() => {
+          throw new Error('boom');
+        }),
       }));
 
       const { isStorageAvailable } = await import('../../server/services/storage.js');
@@ -61,14 +69,29 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('../../server/constants.js', () => ({
         LANGUAGE_MAP: { English: { code: 'en-IN', ttsVoice: 'en-IN-Wavenet-B', gender: 'MALE' } },
-        STT: { ENCODING: 'WEBM_OPUS', SAMPLE_RATE_HZ: 48000, MODEL: 'latest_long', AGRICULTURAL_HINTS: [] },
+        STT: {
+          ENCODING: 'WEBM_OPUS',
+          SAMPLE_RATE_HZ: 48000,
+          MODEL: 'latest_long',
+          AGRICULTURAL_HINTS: [],
+        },
       }));
       vi.doMock('@google-cloud/speech', () => ({
-        default: { SpeechClient: vi.fn().mockImplementation(() => { throw new Error('boom'); }) },
+        default: {
+          SpeechClient: vi.fn().mockImplementation(() => {
+            throw new Error('boom');
+          }),
+        },
       }));
 
       const { isSpeechAvailable } = await import('../../server/services/speech.js');
@@ -84,17 +107,33 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('../../server/services/storage.js', () => ({
         uploadAudio: vi.fn(),
       }));
       vi.doMock('../../server/constants.js', () => ({
         LANGUAGE_MAP: { English: { code: 'en-IN', ttsVoice: 'en-IN-Wavenet-B', gender: 'MALE' } },
-        TTS: { AUDIO_ENCODING: 'MP3', SPEAKING_RATE: 0.9, PITCH: 0, EFFECTS_PROFILE: 'x', DEFAULT_LANGUAGE: 'English' },
+        TTS: {
+          AUDIO_ENCODING: 'MP3',
+          SPEAKING_RATE: 0.9,
+          PITCH: 0,
+          EFFECTS_PROFILE: 'x',
+          DEFAULT_LANGUAGE: 'English',
+        },
       }));
       vi.doMock('@google-cloud/text-to-speech', () => ({
-        default: { TextToSpeechClient: vi.fn().mockImplementation(() => { throw new Error('boom'); }) },
+        default: {
+          TextToSpeechClient: vi.fn().mockImplementation(() => {
+            throw new Error('boom');
+          }),
+        },
       }));
 
       const mod = await import('../../server/services/tts.js');
@@ -114,7 +153,13 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('@google-cloud/firestore', () => {
         const F = vi.fn().mockImplementation(() => ({
@@ -145,7 +190,13 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('@google-cloud/firestore', () => {
         const F = vi.fn().mockImplementation(() => ({
@@ -176,7 +227,13 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: 'test' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('@google-cloud/firestore', () => {
         const F = vi.fn().mockImplementation(() => {
@@ -191,7 +248,6 @@ describe('100% Coverage — Remaining Branches', () => {
     });
   });
 
-
   /* ── tools.js lines 141-168: sendVoiceAlert full execution ── */
   describe('Tools — sendVoiceAlert execution', () => {
     it('executes send_voice_alert and returns audio', async () => {
@@ -200,7 +256,13 @@ describe('100% Coverage — Remaining Branches', () => {
         default: { gcpProjectId: '' },
       }));
       vi.doMock('../../server/services/logger.js', () => ({
-        default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), critical: vi.fn() },
+        default: {
+          info: vi.fn(),
+          warn: vi.fn(),
+          error: vi.fn(),
+          debug: vi.fn(),
+          critical: vi.fn(),
+        },
       }));
       vi.doMock('../../server/services/tts.js', () => ({
         synthesizeSpeech: vi.fn().mockResolvedValue({

@@ -41,9 +41,11 @@ vi.mock('@google-cloud/text-to-speech', () => ({
 vi.mock('@google-cloud/speech', () => ({
   default: {
     SpeechClient: vi.fn().mockImplementation(() => ({
-      recognize: vi.fn().mockResolvedValue([{
-        results: [{ alternatives: [{ transcript: 'soil moisture is 60%', confidence: 0.95 }] }],
-      }]),
+      recognize: vi.fn().mockResolvedValue([
+        {
+          results: [{ alternatives: [{ transcript: 'soil moisture is 60%', confidence: 0.95 }] }],
+        },
+      ]),
     })),
   },
 }));
@@ -181,7 +183,7 @@ describe('Route Branch Coverage', () => {
       const res = await request(app)
         .post('/api/analyze')
         .field('cropInfo', 'Rice')
-        .field('latitude', '999')  // Invalid lat
+        .field('latitude', '999') // Invalid lat
         .field('longitude', '77.2');
       expect(res.status).toBe(400);
       expect(res.body.error).toContain('Validation');
@@ -221,9 +223,7 @@ describe('Route Branch Coverage', () => {
     it('returns 400 when error includes Invalid file type', async () => {
       mockGenerateContent.mockRejectedValueOnce(new Error('Invalid file type: bad'));
 
-      const res = await request(app)
-        .post('/api/analyze')
-        .field('cropInfo', 'Test');
+      const res = await request(app).post('/api/analyze').field('cropInfo', 'Test');
 
       expect(res.status).toBe(400);
       expect(res.body.error).toContain('Invalid file type');
@@ -235,9 +235,7 @@ describe('Route Branch Coverage', () => {
     it('returns 500 for generic errors', async () => {
       mockGenerateContent.mockRejectedValueOnce(new Error('Gemini quota exceeded'));
 
-      const res = await request(app)
-        .post('/api/analyze')
-        .field('cropInfo', 'Wheat');
+      const res = await request(app).post('/api/analyze').field('cropInfo', 'Wheat');
 
       expect(res.status).toBe(500);
       expect(res.body.error).toContain('Analysis failed');
@@ -273,9 +271,7 @@ describe('Route Branch Coverage', () => {
         functionCalls: null,
       });
 
-      const res = await request(app)
-        .post('/api/analyze')
-        .field('cropInfo', 'Rice');
+      const res = await request(app).post('/api/analyze').field('cropInfo', 'Rice');
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
@@ -322,4 +318,3 @@ describe('Route Branch Coverage', () => {
     });
   });
 });
-
