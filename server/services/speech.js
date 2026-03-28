@@ -85,6 +85,13 @@ export async function transcribeAudio(
     };
   } catch (err) {
     logger.error('Speech-to-Text failed', { error: err.message, language });
+
+    // Disable client on credential errors to prevent repeated failures
+    if (err.message?.includes('credentials') || err.message?.includes('authentication')) {
+      logger.warn('Disabling Speech-to-Text due to credential error');
+      speechClient = null;
+    }
+
     return {
       transcript: '',
       confidence: 0,

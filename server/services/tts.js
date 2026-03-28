@@ -79,6 +79,13 @@ export async function synthesizeSpeech(text, language = TTS.DEFAULT_LANGUAGE, an
     };
   } catch (err) {
     logger.error('TTS synthesis failed', { error: err.message, language });
+
+    // Disable client on credential errors to prevent repeated failures
+    if (err.message?.includes('credentials') || err.message?.includes('authentication')) {
+      logger.warn('Disabling TTS due to credential error');
+      ttsClient = null;
+    }
+
     return {
       audioUrl: null,
       audioGenerated: false,

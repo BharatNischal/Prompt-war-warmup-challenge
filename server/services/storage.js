@@ -41,29 +41,46 @@ export async function uploadFile(buffer, filename, contentType, metadata = {}) {
 
   const file = bucket.file(filename);
 
-  await file.save(buffer, {
-    contentType,
-    metadata: {
-      ...metadata,
-      uploadedBy: 'eco-pulse',
-      uploadedAt: new Date().toISOString(),
-    },
-    resumable: false, // Small files don't need resumable upload
-  });
+  try {
+    await file.save(buffer, {
+      contentType,
+      metadata: {
+        ...metadata,
+        uploadedBy: 'eco-pulse',
+        uploadedAt: new Date().toISOString(),
+      },
+      resumable: false, // Small files don't need resumable upload
+    });
 
-  // Generate a signed URL valid for 24 hours
-  const [signedUrl] = await file.getSignedUrl({
-    action: 'read',
-    expires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-  });
+    // Generate a signed URL valid for 24 hours
+    const [signedUrl] = await file.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    });
 
-  logger.info('File uploaded to GCS', { filename, contentType, size: buffer.length });
+    logger.info('File uploaded to GCS', { filename, contentType, size: buffer.length });
 
-  return {
-    url: signedUrl,
-    gcsUri: `gs://${config.gcsBucket}/${filename}`,
-    stored: true,
-  };
+    return {
+      url: signedUrl,
+      gcsUri: `gs://${config.gcsBucket}/${filename}`,
+      stored: true,
+    };
+  } catch (err) {
+    logger.error('GCS upload failed', { error: err.message, filename });
+
+    // Disable GCS on credential errors to prevent repeated failures
+    if (err.message?.includes('credentials') || err.message?.includes('authentication')) {
+      logger.warn('Disabling Cloud Storage due to credential error');
+      bucket = null;
+    }
+
+    return {
+      url: `/local/${filename}`,
+      gcsUri: `gs://local/${filename}`,
+      stored: false,
+      message: `Upload failed: ${err.message}`,
+    };
+  }
 }
 
 /**
