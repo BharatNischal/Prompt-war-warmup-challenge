@@ -36,9 +36,11 @@ vi.mock('@google-cloud/text-to-speech', () => ({
 vi.mock('@google-cloud/speech', () => ({
   default: {
     SpeechClient: vi.fn().mockImplementation(() => ({
-      recognize: vi.fn().mockResolvedValue([{
-        results: [{ alternatives: [{ transcript: 'test', confidence: 0.9 }] }],
-      }]),
+      recognize: vi.fn().mockResolvedValue([
+        {
+          results: [{ alternatives: [{ transcript: 'test', confidence: 0.9 }] }],
+        },
+      ]),
     })),
   },
   SpeechClient: vi.fn(),
@@ -148,9 +150,7 @@ describe('API Integration Tests', () => {
     });
 
     it('processes analysis without coordinates', async () => {
-      const res = await request(app)
-        .post('/api/analyze')
-        .field('cropInfo', 'Wheat, 5 acres');
+      const res = await request(app).post('/api/analyze').field('cropInfo', 'Wheat, 5 acres');
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
@@ -177,9 +177,7 @@ describe('API Integration Tests', () => {
     });
 
     it('includes voice transcript info in response', async () => {
-      const res = await request(app)
-        .post('/api/analyze')
-        .field('cropInfo', 'Rice, rain damage');
+      const res = await request(app).post('/api/analyze').field('cropInfo', 'Rice, rain damage');
 
       expect(res.status).toBe(200);
       expect(res.body.inputSummary.hasVoiceNote).toBe(false);

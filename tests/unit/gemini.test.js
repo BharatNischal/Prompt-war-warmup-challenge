@@ -132,9 +132,9 @@ describe('Gemini Service', () => {
   it('throws on Gemini API error', async () => {
     mockGenerateContent.mockRejectedValueOnce(new Error('API quota exceeded'));
 
-    await expect(
-      analyzeField({ sensorData: 'test' }),
-    ).rejects.toThrow('Analysis failed: API quota exceeded');
+    await expect(analyzeField({ sensorData: 'test' })).rejects.toThrow(
+      'Analysis failed: API quota exceeded',
+    );
   });
 
   it('handles empty text response from Gemini', async () => {

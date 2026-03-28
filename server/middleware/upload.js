@@ -1,13 +1,7 @@
 import multer from 'multer';
 import config from '../config.js';
 
-const IMAGE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/heic',
-  'image/heif',
-];
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 
 const AUDIO_TYPES = [
   'audio/webm',

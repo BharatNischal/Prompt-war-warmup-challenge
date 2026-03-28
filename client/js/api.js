@@ -3,7 +3,7 @@
  */
 
 const EcoAPI = (() => {
-  const BASE = '';  // Same origin
+  const BASE = ''; // Same origin
 
   /**
    * Submit field data for analysis.

@@ -27,7 +27,10 @@ export function isValidLongitude(lon) {
 export function sanitizeText(text, maxLen = 2000) {
   if (typeof text !== 'string') return '';
   // Remove control characters except newline/tab
-  return text.replace(/[^\P{C}\n\t]/gu, '').trim().slice(0, maxLen);
+  return text
+    .replace(/[^\P{C}\n\t]/gu, '')
+    .trim()
+    .slice(0, maxLen);
 }
 
 /**

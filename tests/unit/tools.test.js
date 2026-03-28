@@ -22,7 +22,9 @@ vi.mock('../../server/services/tts.js', () => ({
 
 // Mock storage
 vi.mock('../../server/services/storage.js', () => ({
-  uploadFieldImage: vi.fn().mockResolvedValue({ url: 'https://storage.test/img.jpg', stored: true }),
+  uploadFieldImage: vi
+    .fn()
+    .mockResolvedValue({ url: 'https://storage.test/img.jpg', stored: true }),
   uploadAudio: vi.fn().mockResolvedValue({ url: 'https://storage.test/audio.mp3', stored: true }),
   isStorageAvailable: vi.fn().mockReturnValue(false),
 }));
@@ -32,7 +34,7 @@ import { toolDeclarations, executeToolCall } from '../../server/services/tools.j
 describe('Tool Declarations', () => {
   it('declares reserve_warehouse_space tool', () => {
     const tool = toolDeclarations[0].functionDeclarations.find(
-      (t) => t.name === 'reserve_warehouse_space'
+      (t) => t.name === 'reserve_warehouse_space',
     );
     expect(tool).toBeDefined();
     expect(tool.parameters.properties.crop_type).toBeDefined();
@@ -45,7 +47,7 @@ describe('Tool Declarations', () => {
 
   it('declares send_voice_alert tool', () => {
     const tool = toolDeclarations[0].functionDeclarations.find(
-      (t) => t.name === 'send_voice_alert'
+      (t) => t.name === 'send_voice_alert',
     );
     expect(tool).toBeDefined();
     expect(tool.parameters.properties.phone_number).toBeDefined();
@@ -56,10 +58,13 @@ describe('Tool Declarations', () => {
 
   it('urgency_level has valid enum values', () => {
     const tool = toolDeclarations[0].functionDeclarations.find(
-      (t) => t.name === 'reserve_warehouse_space'
+      (t) => t.name === 'reserve_warehouse_space',
     );
     expect(tool.parameters.properties.urgency_level.enum).toEqual([
-      'LOW', 'MEDIUM', 'HIGH', 'CRITICAL',
+      'LOW',
+      'MEDIUM',
+      'HIGH',
+      'CRITICAL',
     ]);
   });
 });
@@ -84,8 +89,16 @@ describe('Tool Execution', () => {
 
     it('generates unique confirmation IDs', async () => {
       const [r1, r2] = await Promise.all([
-        executeToolCall('reserve_warehouse_space', { crop_type: 'rice', quantity_kg: 100, urgency_level: 'LOW' }),
-        executeToolCall('reserve_warehouse_space', { crop_type: 'wheat', quantity_kg: 200, urgency_level: 'MEDIUM' }),
+        executeToolCall('reserve_warehouse_space', {
+          crop_type: 'rice',
+          quantity_kg: 100,
+          urgency_level: 'LOW',
+        }),
+        executeToolCall('reserve_warehouse_space', {
+          crop_type: 'wheat',
+          quantity_kg: 200,
+          urgency_level: 'MEDIUM',
+        }),
       ]);
       expect(r1.confirmation_id).not.toBe(r2.confirmation_id);
     });

@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { AppError, ValidationError, NotFoundError, RateLimitError, ExternalServiceError } from '../../server/utils/errors.js';
+import {
+  AppError,
+  ValidationError,
+  NotFoundError,
+  RateLimitError,
+  ExternalServiceError,
+} from '../../server/utils/errors.js';
 
 describe('Custom Error Classes', () => {
   describe('AppError', () => {

@@ -65,9 +65,7 @@ export async function getAnalysisHistory({ limit = 10, lat: _lat, lon: _lon } = 
   }
 
   try {
-    const query = db.collection(COLLECTION)
-      .orderBy('createdAt', 'desc')
-      .limit(limit);
+    const query = db.collection(COLLECTION).orderBy('createdAt', 'desc').limit(limit);
 
     const snapshot = await query.get();
     const results = [];

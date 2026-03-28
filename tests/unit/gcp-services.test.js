@@ -54,9 +54,7 @@ const mockRecognize = vi.fn().mockResolvedValue([
   {
     results: [
       {
-        alternatives: [
-          { transcript: 'soil moisture is forty percent', confidence: 0.92 },
-        ],
+        alternatives: [{ transcript: 'soil moisture is forty percent', confidence: 0.92 }],
       },
     ],
   },
@@ -137,9 +135,8 @@ describe('GCP Services — Deep Coverage', () => {
   // ── Storage ──
   describe('Storage', () => {
     it('exports all storage functions', async () => {
-      const { uploadFile, uploadFieldImage, uploadAudio, isStorageAvailable } = await import(
-        '../../server/services/storage.js'
-      );
+      const { uploadFile, uploadFieldImage, uploadAudio, isStorageAvailable } =
+        await import('../../server/services/storage.js');
       expect(uploadFile).toBeDefined();
       expect(uploadFieldImage).toBeDefined();
       expect(uploadAudio).toBeDefined();
@@ -221,9 +218,8 @@ describe('GCP Services — Deep Coverage', () => {
   // ── Speech-to-Text ──
   describe('Speech-to-Text', () => {
     it('exports transcribeAudio and isSpeechAvailable', async () => {
-      const { transcribeAudio, isSpeechAvailable } = await import(
-        '../../server/services/speech.js'
-      );
+      const { transcribeAudio, isSpeechAvailable } =
+        await import('../../server/services/speech.js');
       expect(transcribeAudio).toBeDefined();
       expect(isSpeechAvailable).toBeDefined();
     });

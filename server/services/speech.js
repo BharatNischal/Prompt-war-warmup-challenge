@@ -73,14 +73,29 @@ export async function transcribeAudio(
         // Enable word-level confidence for quality assessment
         enableWordConfidence: true,
         // Agricultural domain hints
-        speechContexts: [{
-          phrases: [
-            'soil moisture', 'humidity', 'temperature', 'rainfall',
-            'rice', 'wheat', 'cotton', 'sugarcane', 'harvest',
-            'cyclone', 'flood', 'drought', 'irrigation',
-            'fertilizer', 'pesticide', 'yield', 'acres',
-          ],
-        }],
+        speechContexts: [
+          {
+            phrases: [
+              'soil moisture',
+              'humidity',
+              'temperature',
+              'rainfall',
+              'rice',
+              'wheat',
+              'cotton',
+              'sugarcane',
+              'harvest',
+              'cyclone',
+              'flood',
+              'drought',
+              'irrigation',
+              'fertilizer',
+              'pesticide',
+              'yield',
+              'acres',
+            ],
+          },
+        ],
       },
     });
 

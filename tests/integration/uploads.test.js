@@ -37,9 +37,13 @@ vi.mock('@google-cloud/text-to-speech', () => ({
 vi.mock('@google-cloud/speech', () => ({
   default: {
     SpeechClient: vi.fn().mockImplementation(() => ({
-      recognize: vi.fn().mockResolvedValue([{
-        results: [{ alternatives: [{ transcript: 'soil moisture is 30 percent', confidence: 0.88 }] }],
-      }]),
+      recognize: vi.fn().mockResolvedValue([
+        {
+          results: [
+            { alternatives: [{ transcript: 'soil moisture is 30 percent', confidence: 0.88 }] },
+          ],
+        },
+      ]),
     })),
   },
   SpeechClient: vi.fn(),
@@ -149,9 +153,7 @@ describe('Upload Integration Tests', () => {
   it('handles Gemini API errors gracefully', async () => {
     mockGenerateContent.mockRejectedValueOnce(new Error('Gemini API quota exceeded'));
 
-    const res = await request(app)
-      .post('/api/analyze')
-      .field('cropInfo', 'Rice');
+    const res = await request(app).post('/api/analyze').field('cropInfo', 'Rice');
 
     expect(res.status).toBe(500);
     expect(res.body.error).toContain('Analysis failed');
@@ -161,7 +163,10 @@ describe('Upload Integration Tests', () => {
     const fakeFile = Buffer.from('not-an-image');
     const res = await request(app)
       .post('/api/analyze')
-      .attach('fieldImages', fakeFile, { filename: 'evil.exe', contentType: 'application/x-msdownload' })
+      .attach('fieldImages', fakeFile, {
+        filename: 'evil.exe',
+        contentType: 'application/x-msdownload',
+      })
       .field('cropInfo', 'Rice');
 
     // Multer rejects invalid MIME types — may return 400 or 500 depending on error handler

@@ -1,7 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
-import config from "../config.js";
-import { toolDeclarations, executeToolCall } from "./tools.js";
-import logger from "./logger.js";
+import { GoogleGenAI } from '@google/genai';
+import config from '../config.js';
+import { toolDeclarations, executeToolCall } from './tools.js';
+import logger from './logger.js';
 
 const SYSTEM_INSTRUCTION = `You are "Eco-Pulse", an expert Climate Strategist AI designed to protect farmers' livelihoods.
 
@@ -48,12 +48,12 @@ const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
  */
 export async function analyzeField({
   images = [],
-  weatherContext = "",
-  sensorData = "",
-  cropInfo = "",
-  phone = "",
-  language = "English",
-  analysisId = "",
+  weatherContext = '',
+  sensorData = '',
+  cropInfo = '',
+  phone = '',
+  language = 'English',
+  analysisId = '',
 }) {
   // Build the multimodal content parts
   const parts = [];
@@ -62,15 +62,14 @@ export async function analyzeField({
   for (const img of images) {
     parts.push({
       inlineData: {
-        data: img.buffer.toString("base64"),
+        data: img.buffer.toString('base64'),
         mimeType: img.mimeType,
       },
     });
   }
 
   // Build the text prompt
-  let prompt =
-    "Analyze the following farmer data and provide life-saving recommendations:\n\n";
+  let prompt = 'Analyze the following farmer data and provide life-saving recommendations:\n\n';
 
   if (weatherContext) {
     prompt += `WEATHER FORECAST DATA:\n${weatherContext}\n\n`;
@@ -93,18 +92,18 @@ export async function analyzeField({
   }
 
   prompt +=
-    "Based on all the above data, provide your complete analysis and take any necessary actions using the available tools.";
+    'Based on all the above data, provide your complete analysis and take any necessary actions using the available tools.';
 
   parts.push({ text: prompt });
 
   // Call Gemini with tools
   const actions = [];
-  let finalAnalysis = "";
+  let finalAnalysis = '';
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [{ role: "user", parts }],
+      model: 'gemini-2.5-flash',
+      contents: [{ role: 'user', parts }],
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: toolDeclarations,
@@ -134,12 +133,12 @@ export async function analyzeField({
 
       // Send function results back to Gemini for final summary
       const followUp = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: 'gemini-2.5-flash',
         contents: [
-          { role: "user", parts },
-          { role: "model", parts: response.candidates[0].content.parts },
+          { role: 'user', parts },
+          { role: 'model', parts: response.candidates[0].content.parts },
           {
-            role: "user",
+            role: 'user',
             parts: functionResponses.map((fr) => ({
               functionResponse: fr,
             })),
@@ -152,13 +151,13 @@ export async function analyzeField({
         },
       });
 
-      finalAnalysis = followUp.text || "";
+      finalAnalysis = followUp.text || '';
     } else {
       // No function calls — direct analysis
-      finalAnalysis = response.text || "";
+      finalAnalysis = response.text || '';
     }
   } catch (error) {
-    logger.error("Gemini API error", { error: error.message, analysisId });
+    logger.error('Gemini API error', { error: error.message, analysisId });
     throw new Error(`Analysis failed: ${error.message}`);
   }
 

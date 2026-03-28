@@ -1,297 +1,401 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco-Pulse — Hyper-Local Climate Resilience</title>
-  <meta name="description" content="Gemini-powered climate strategist that transforms messy farmer inputs into life-saving actions. Upload field photos, sensor data, and get instant, personalized harvest guidance.">
-  <meta name="theme-color" content="#06090f">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  <!-- Skip to main content (Accessibility) -->
-  <a href="#main-content" class="skip-link" id="skip-link">Skip to main content</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eco-Pulse — Hyper-Local Climate Resilience</title>
+    <meta
+      name="description"
+      content="Gemini-powered climate strategist that transforms messy farmer inputs into life-saving actions. Upload field photos, sensor data, and get instant, personalized harvest guidance."
+    />
+    <meta name="theme-color" content="#06090f" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <!-- Skip to main content (Accessibility) -->
+    <a href="#main-content" class="skip-link" id="skip-link">Skip to main content</a>
 
-  <!-- ARIA Live Region for dynamic announcements -->
-  <div id="aria-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <!-- ARIA Live Region for dynamic announcements -->
+    <div id="aria-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- ═══ HEADER ═══ -->
-  <header class="header" role="banner">
-    <div class="container header__inner">
-      <div class="header__brand">
-        <div class="header__logo" aria-hidden="true">🌿</div>
-        <h1 class="header__title">Eco-Pulse</h1>
-      </div>
-      <div class="header__status">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="status-text">System Ready</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- ═══ MAIN CONTENT ═══ -->
-  <main id="main-content">
-
-    <!-- ─── HERO ─── -->
-    <section class="hero container" aria-labelledby="hero-title">
-      <div class="hero__badge">
-        <span aria-hidden="true">⚡</span>
-        Gemini-Powered Climate Strategist
-      </div>
-      <h2 class="hero__title" id="hero-title">
-        Turn Weather Chaos into <span>Life-Saving Action</span>
-      </h2>
-      <p class="hero__subtitle">
-        Upload your field photos, handwritten logbooks, sensor data, or <strong>record a voice memo</strong>.
-        Our AI correlates real-time weather threats with your specific crop state
-        to trigger instant, personalized harvest and storage actions.
-      </p>
-    </section>
-
-    <!-- ─── INPUT FORM ─── -->
-    <section class="form-section container" aria-labelledby="input-title">
-      <div class="card">
-        <div class="card__header">
-          <div class="card__icon card__icon--accent" aria-hidden="true">📡</div>
-          <div>
-            <h2 class="card__title" id="input-title">Field Intelligence Input</h2>
-            <p class="card__subtitle">Provide your messy, real-world data — we'll make sense of it</p>
-          </div>
+    <!-- ═══ HEADER ═══ -->
+    <header class="header" role="banner">
+      <div class="container header__inner">
+        <div class="header__brand">
+          <div class="header__logo" aria-hidden="true">🌿</div>
+          <h1 class="header__title">Eco-Pulse</h1>
         </div>
+        <div class="header__status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="status-text">System Ready</span>
+        </div>
+      </div>
+    </header>
 
-        <form id="analyze-form" aria-label="Field analysis form">
-          <div class="form-grid">
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main id="main-content">
+      <!-- ─── HERO ─── -->
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero__badge">
+          <span aria-hidden="true">⚡</span>
+          Gemini-Powered Climate Strategist
+        </div>
+        <h2 class="hero__title" id="hero-title">
+          Turn Weather Chaos into <span>Life-Saving Action</span>
+        </h2>
+        <p class="hero__subtitle">
+          Upload your field photos, handwritten logbooks, sensor data, or
+          <strong>record a voice memo</strong>. Our AI correlates real-time weather threats with
+          your specific crop state to trigger instant, personalized harvest and storage actions.
+        </p>
+      </section>
 
-            <!-- Image Upload -->
-            <div class="form-group form-group--full">
-              <label class="form-label" for="field-images">Field & Logbook Photos</label>
-              <div class="upload-zone" id="upload-zone" role="button" tabindex="0"
-                   aria-label="Upload field images by clicking or dragging files here">
-                <input type="file" id="field-images" name="fieldImages"
-                       accept="image/jpeg,image/png,image/webp,image/heic"
-                       multiple aria-describedby="upload-hint">
-                <div class="upload-zone__icon" aria-hidden="true">📸</div>
-                <p class="upload-zone__text">Drop field photos &amp; logbook scans here</p>
-                <p class="upload-zone__hint" id="upload-hint">JPEG, PNG, WebP up to 5MB each · Max 5 files</p>
-              </div>
-              <div class="upload-previews" id="upload-previews" aria-label="Uploaded image previews"></div>
+      <!-- ─── INPUT FORM ─── -->
+      <section class="form-section container" aria-labelledby="input-title">
+        <div class="card">
+          <div class="card__header">
+            <div class="card__icon card__icon--accent" aria-hidden="true">📡</div>
+            <div>
+              <h2 class="card__title" id="input-title">Field Intelligence Input</h2>
+              <p class="card__subtitle">
+                Provide your messy, real-world data — we'll make sense of it
+              </p>
             </div>
+          </div>
 
-            <!-- Location -->
-            <div class="form-group">
-              <label class="form-label" for="latitude">Latitude</label>
-              <input type="number" class="form-input" id="latitude" name="latitude"
-                     placeholder="e.g., 28.6139" step="any" min="-90" max="90"
-                     aria-describedby="lat-hint">
-              <span class="form-hint" id="lat-hint" style="font-size: var(--text-xs); color: var(--text-muted);">
-                Your field's latitude coordinate
-              </span>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="longitude">Longitude</label>
-              <input type="number" class="form-input" id="longitude" name="longitude"
-                     placeholder="e.g., 77.2090" step="any" min="-180" max="180"
-                     aria-describedby="lon-hint">
-              <span class="form-hint" id="lon-hint" style="font-size: var(--text-xs); color: var(--text-muted);">
-                Your field's longitude coordinate
-              </span>
-            </div>
-
-            <!-- Crop Info -->
-            <div class="form-group">
-              <label class="form-label" for="crop-info">Crop Information</label>
-              <input type="text" class="form-input" id="crop-info" name="cropInfo"
-                     placeholder="e.g., Rice (Basmati), 2 acres, planted 90 days ago">
-            </div>
-
-            <!-- Language -->
-            <div class="form-group">
-              <label class="form-label" for="language">Alert Language</label>
-              <select class="form-select" id="language" name="language">
-                <option value="English">English</option>
-                <option value="Hindi">Hindi (हिन्दी)</option>
-                <option value="Tamil">Tamil (தமிழ்)</option>
-                <option value="Telugu">Telugu (తెలుగు)</option>
-                <option value="Bengali">Bengali (বাংলা)</option>
-                <option value="Marathi">Marathi (मराठी)</option>
-                <option value="Punjabi">Punjabi (ਪੰਜਾਬੀ)</option>
-                <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
-              </select>
-            </div>
-
-            <!-- Sensor Data -->
-            <div class="form-group form-group--full">
-              <label class="form-label" for="sensor-data">Sensor Readings / Notes</label>
-              <textarea class="form-textarea" id="sensor-data" name="sensorData"
-                        placeholder="Paste soil moisture readings, temperature logs, humidity data, or any handwritten notes you have..."
-                        aria-describedby="sensor-hint"></textarea>
-              <span class="form-hint" id="sensor-hint" style="font-size: var(--text-xs); color: var(--text-muted);">
-                Any format works — raw numbers, CSV, or plain text descriptions
-              </span>
-            </div>
-
-            <!-- Voice Memo -->
-            <div class="form-group form-group--full">
-              <label class="form-label" for="voice-note">Voice Memo (Optional)</label>
-              <div class="voice-recorder" id="voice-recorder">
-                <button type="button" class="btn btn--voice" id="record-btn"
-                        aria-label="Record a voice memo describing your field conditions">
-                  <span class="voice-icon" id="voice-icon" aria-hidden="true">🎤</span>
-                  <span id="record-label">Tap to Record</span>
-                </button>
-                <div class="voice-status" id="voice-status" aria-live="polite">
-                  <span id="voice-timer"></span>
+          <form id="analyze-form" aria-label="Field analysis form">
+            <div class="form-grid">
+              <!-- Image Upload -->
+              <div class="form-group form-group--full">
+                <label class="form-label" for="field-images">Field & Logbook Photos</label>
+                <div
+                  class="upload-zone"
+                  id="upload-zone"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Upload field images by clicking or dragging files here"
+                >
+                  <input
+                    type="file"
+                    id="field-images"
+                    name="fieldImages"
+                    accept="image/jpeg,image/png,image/webp,image/heic"
+                    multiple
+                    aria-describedby="upload-hint"
+                  />
+                  <div class="upload-zone__icon" aria-hidden="true">📸</div>
+                  <p class="upload-zone__text">Drop field photos &amp; logbook scans here</p>
+                  <p class="upload-zone__hint" id="upload-hint">
+                    JPEG, PNG, WebP up to 5MB each · Max 5 files
+                  </p>
                 </div>
-                <audio id="voice-preview" controls style="display:none; width:100%; margin-top:0.5rem;"
-                       aria-label="Voice memo preview"></audio>
-                <input type="file" id="voice-note" name="voiceNote"
-                       accept="audio/webm,audio/ogg,audio/wav,audio/mp3,audio/mpeg"
-                       style="display:none">
+                <div
+                  class="upload-previews"
+                  id="upload-previews"
+                  aria-label="Uploaded image previews"
+                ></div>
               </div>
-              <span class="form-hint" style="font-size: var(--text-xs); color: var(--text-muted);">
-                Speak your sensor readings or field observations in any language
-              </span>
+
+              <!-- Location -->
+              <div class="form-group">
+                <label class="form-label" for="latitude">Latitude</label>
+                <input
+                  type="number"
+                  class="form-input"
+                  id="latitude"
+                  name="latitude"
+                  placeholder="e.g., 28.6139"
+                  step="any"
+                  min="-90"
+                  max="90"
+                  aria-describedby="lat-hint"
+                />
+                <span
+                  class="form-hint"
+                  id="lat-hint"
+                  style="font-size: var(--text-xs); color: var(--text-muted)"
+                >
+                  Your field's latitude coordinate
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="longitude">Longitude</label>
+                <input
+                  type="number"
+                  class="form-input"
+                  id="longitude"
+                  name="longitude"
+                  placeholder="e.g., 77.2090"
+                  step="any"
+                  min="-180"
+                  max="180"
+                  aria-describedby="lon-hint"
+                />
+                <span
+                  class="form-hint"
+                  id="lon-hint"
+                  style="font-size: var(--text-xs); color: var(--text-muted)"
+                >
+                  Your field's longitude coordinate
+                </span>
+              </div>
+
+              <!-- Crop Info -->
+              <div class="form-group">
+                <label class="form-label" for="crop-info">Crop Information</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  id="crop-info"
+                  name="cropInfo"
+                  placeholder="e.g., Rice (Basmati), 2 acres, planted 90 days ago"
+                />
+              </div>
+
+              <!-- Language -->
+              <div class="form-group">
+                <label class="form-label" for="language">Alert Language</label>
+                <select class="form-select" id="language" name="language">
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi (हिन्दी)</option>
+                  <option value="Tamil">Tamil (தமிழ்)</option>
+                  <option value="Telugu">Telugu (తెలుగు)</option>
+                  <option value="Bengali">Bengali (বাংলা)</option>
+                  <option value="Marathi">Marathi (मराठी)</option>
+                  <option value="Punjabi">Punjabi (ਪੰਜਾਬੀ)</option>
+                  <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+                </select>
+              </div>
+
+              <!-- Sensor Data -->
+              <div class="form-group form-group--full">
+                <label class="form-label" for="sensor-data">Sensor Readings / Notes</label>
+                <textarea
+                  class="form-textarea"
+                  id="sensor-data"
+                  name="sensorData"
+                  placeholder="Paste soil moisture readings, temperature logs, humidity data, or any handwritten notes you have..."
+                  aria-describedby="sensor-hint"
+                ></textarea>
+                <span
+                  class="form-hint"
+                  id="sensor-hint"
+                  style="font-size: var(--text-xs); color: var(--text-muted)"
+                >
+                  Any format works — raw numbers, CSV, or plain text descriptions
+                </span>
+              </div>
+
+              <!-- Voice Memo -->
+              <div class="form-group form-group--full">
+                <label class="form-label" for="voice-note">Voice Memo (Optional)</label>
+                <div class="voice-recorder" id="voice-recorder">
+                  <button
+                    type="button"
+                    class="btn btn--voice"
+                    id="record-btn"
+                    aria-label="Record a voice memo describing your field conditions"
+                  >
+                    <span class="voice-icon" id="voice-icon" aria-hidden="true">🎤</span>
+                    <span id="record-label">Tap to Record</span>
+                  </button>
+                  <div class="voice-status" id="voice-status" aria-live="polite">
+                    <span id="voice-timer"></span>
+                  </div>
+                  <audio
+                    id="voice-preview"
+                    controls
+                    style="display: none; width: 100%; margin-top: 0.5rem"
+                    aria-label="Voice memo preview"
+                  ></audio>
+                  <input
+                    type="file"
+                    id="voice-note"
+                    name="voiceNote"
+                    accept="audio/webm,audio/ogg,audio/wav,audio/mp3,audio/mpeg"
+                    style="display: none"
+                  />
+                </div>
+                <span class="form-hint" style="font-size: var(--text-xs); color: var(--text-muted)">
+                  Speak your sensor readings or field observations in any language
+                </span>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone for Voice Alert</label>
+                <input
+                  type="tel"
+                  class="form-input"
+                  id="phone"
+                  name="phone"
+                  placeholder="+919876543210"
+                  aria-describedby="phone-hint"
+                />
+                <span
+                  class="form-hint"
+                  id="phone-hint"
+                  style="font-size: var(--text-xs); color: var(--text-muted)"
+                >
+                  E.164 format with country code
+                </span>
+              </div>
+
+              <!-- Submit -->
+              <div class="form-group" style="justify-content: flex-end">
+                <button type="submit" class="btn btn--primary btn--lg" id="analyze-btn">
+                  <span aria-hidden="true">🔍</span>
+                  Analyze &amp; Protect
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ─── RESULTS DASHBOARD ─── -->
+      <section class="results container" id="results-section" aria-labelledby="results-title">
+        <h2 class="sr-only" id="results-title">Analysis Results</h2>
+
+        <div class="grid grid--sidebar">
+          <!-- Main Analysis -->
+          <div>
+            <!-- Risk Assessment -->
+            <div class="card" id="risk-card" style="margin-bottom: var(--space-lg)">
+              <div class="card__header">
+                <div class="card__icon card__icon--danger" aria-hidden="true">⚠️</div>
+                <div>
+                  <h3 class="card__title">Risk Assessment</h3>
+                  <p class="card__subtitle">Based on weather × crop state correlation</p>
+                </div>
+              </div>
+              <div class="risk-gauge">
+                <div class="risk-gauge__circle" id="risk-circle">
+                  <span class="risk-gauge__level" id="risk-level">—</span>
+                  <span class="risk-gauge__label">Risk Level</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Phone -->
-            <div class="form-group">
-              <label class="form-label" for="phone">Phone for Voice Alert</label>
-              <input type="tel" class="form-input" id="phone" name="phone"
-                     placeholder="+919876543210"
-                     aria-describedby="phone-hint">
-              <span class="form-hint" id="phone-hint" style="font-size: var(--text-xs); color: var(--text-muted);">
-                E.164 format with country code
-              </span>
-            </div>
-
-            <!-- Submit -->
-            <div class="form-group" style="justify-content: flex-end;">
-              <button type="submit" class="btn btn--primary btn--lg" id="analyze-btn">
-                <span aria-hidden="true">🔍</span>
-                Analyze &amp; Protect
-              </button>
+            <!-- Gemini Analysis -->
+            <div class="card" id="analysis-card" style="margin-bottom: var(--space-lg)">
+              <div class="card__header">
+                <div class="card__icon card__icon--accent" aria-hidden="true">🧠</div>
+                <div>
+                  <h3 class="card__title">Climate Strategist Analysis</h3>
+                  <p class="card__subtitle">Powered by Google Gemini</p>
+                </div>
+              </div>
+              <div class="analysis-text" id="analysis-text"></div>
+              <!-- Audio Alert Playback -->
+              <div id="audio-alert-container" style="display: none; margin-top: var(--space-md)">
+                <h4 style="color: var(--text-secondary); margin-bottom: var(--space-xs)">
+                  🔊 Voice Alert Audio
+                </h4>
+                <audio
+                  id="alert-audio"
+                  controls
+                  style="width: 100%"
+                  aria-label="Generated voice alert audio"
+                ></audio>
+                <p
+                  style="
+                    font-size: var(--text-xs);
+                    color: var(--text-muted);
+                    margin-top: var(--space-xs);
+                  "
+                >
+                  Generated by Google Cloud Text-to-Speech
+                </p>
+              </div>
             </div>
           </div>
-        </form>
-      </div>
-    </section>
 
-    <!-- ─── RESULTS DASHBOARD ─── -->
-    <section class="results container" id="results-section" aria-labelledby="results-title">
-      <h2 class="sr-only" id="results-title">Analysis Results</h2>
-
-      <div class="grid grid--sidebar">
-        <!-- Main Analysis -->
-        <div>
-          <!-- Risk Assessment -->
-          <div class="card" id="risk-card" style="margin-bottom: var(--space-lg);">
-            <div class="card__header">
-              <div class="card__icon card__icon--danger" aria-hidden="true">⚠️</div>
-              <div>
-                <h3 class="card__title">Risk Assessment</h3>
-                <p class="card__subtitle">Based on weather × crop state correlation</p>
+          <!-- Sidebar: Actions + Weather -->
+          <div>
+            <!-- Actions Triggered -->
+            <div class="card" style="margin-bottom: var(--space-lg)">
+              <div class="card__header">
+                <div class="card__icon card__icon--success" aria-hidden="true">🚀</div>
+                <div>
+                  <h3 class="card__title">Actions Triggered</h3>
+                  <p class="card__subtitle">Automated life-saving responses</p>
+                </div>
+              </div>
+              <div id="actions-container">
+                <p style="color: var(--text-muted); font-size: var(--text-sm)">
+                  No actions triggered yet
+                </p>
               </div>
             </div>
-            <div class="risk-gauge">
-              <div class="risk-gauge__circle" id="risk-circle">
-                <span class="risk-gauge__level" id="risk-level">—</span>
-                <span class="risk-gauge__label">Risk Level</span>
-              </div>
-            </div>
-          </div>
 
-          <!-- Gemini Analysis -->
-          <div class="card" id="analysis-card" style="margin-bottom: var(--space-lg);">
-            <div class="card__header">
-              <div class="card__icon card__icon--accent" aria-hidden="true">🧠</div>
-              <div>
-                <h3 class="card__title">Climate Strategist Analysis</h3>
-                <p class="card__subtitle">Powered by Google Gemini</p>
+            <!-- Weather Forecast -->
+            <div class="card">
+              <div class="card__header">
+                <div class="card__icon card__icon--info" aria-hidden="true">🌤️</div>
+                <div>
+                  <h3 class="card__title">Weather Forecast</h3>
+                  <p class="card__subtitle">Next 48 hours at your location</p>
+                </div>
               </div>
-            </div>
-            <div class="analysis-text" id="analysis-text"></div>
-            <!-- Audio Alert Playback -->
-            <div id="audio-alert-container" style="display:none; margin-top:var(--space-md);">
-              <h4 style="color:var(--text-secondary); margin-bottom:var(--space-xs);">🔊 Voice Alert Audio</h4>
-              <audio id="alert-audio" controls style="width:100%;" aria-label="Generated voice alert audio"></audio>
-              <p style="font-size:var(--text-xs); color:var(--text-muted); margin-top:var(--space-xs);">Generated by Google Cloud Text-to-Speech</p>
+              <div class="weather-strip" id="weather-strip">
+                <p style="color: var(--text-muted); font-size: var(--text-sm)">
+                  Provide coordinates to see forecast
+                </p>
+              </div>
             </div>
           </div>
         </div>
+      </section>
+    </main>
 
-        <!-- Sidebar: Actions + Weather -->
-        <div>
-          <!-- Actions Triggered -->
-          <div class="card" style="margin-bottom: var(--space-lg);">
-            <div class="card__header">
-              <div class="card__icon card__icon--success" aria-hidden="true">🚀</div>
-              <div>
-                <h3 class="card__title">Actions Triggered</h3>
-                <p class="card__subtitle">Automated life-saving responses</p>
-              </div>
-            </div>
-            <div id="actions-container">
-              <p style="color: var(--text-muted); font-size: var(--text-sm);">No actions triggered yet</p>
-            </div>
-          </div>
-
-          <!-- Weather Forecast -->
-          <div class="card">
-            <div class="card__header">
-              <div class="card__icon card__icon--info" aria-hidden="true">🌤️</div>
-              <div>
-                <h3 class="card__title">Weather Forecast</h3>
-                <p class="card__subtitle">Next 48 hours at your location</p>
-              </div>
-            </div>
-            <div class="weather-strip" id="weather-strip">
-              <p style="color: var(--text-muted); font-size: var(--text-sm);">Provide coordinates to see forecast</p>
-            </div>
-          </div>
-        </div>
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <p>
+          Eco-Pulse — Built with
+          <span aria-hidden="true">💚</span>
+          <span class="sr-only">love</span>
+          using Google Gemini for the Prompt Wars Challenge
+        </p>
+        <p style="margin-top: var(--space-xs)">
+          <a href="#" id="a11y-statement-link">Accessibility Statement</a>
+        </p>
       </div>
-    </section>
+    </footer>
 
-  </main>
-
-  <!-- ═══ FOOTER ═══ -->
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <p>
-        Eco-Pulse — Built with
-        <span aria-hidden="true">💚</span>
-        <span class="sr-only">love</span>
-        using Google Gemini for the Prompt Wars Challenge
-      </p>
-      <p style="margin-top: var(--space-xs);">
-        <a href="#" id="a11y-statement-link">Accessibility Statement</a>
-      </p>
+    <!-- ═══ LOADING OVERLAY ═══ -->
+    <div
+      class="loading-overlay"
+      id="loading-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Analysis in progress"
+      aria-busy="true"
+    >
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p class="loading-text" id="loading-text">Analyzing your field data...</p>
+      <ul class="loading-steps" id="loading-steps" aria-label="Processing steps">
+        <li id="step-compress">📷 Compressing images...</li>
+        <li id="step-weather">🌤️ Fetching weather data...</li>
+        <li id="step-gemini">🧠 Running Gemini analysis...</li>
+        <li id="step-actions">🚀 Executing actions...</li>
+        <li id="step-done">✅ Complete!</li>
+      </ul>
     </div>
-  </footer>
 
-  <!-- ═══ LOADING OVERLAY ═══ -->
-  <div class="loading-overlay" id="loading-overlay" role="dialog" aria-modal="true"
-       aria-label="Analysis in progress" aria-busy="true">
-    <div class="loading-spinner" aria-hidden="true"></div>
-    <p class="loading-text" id="loading-text">Analyzing your field data...</p>
-    <ul class="loading-steps" id="loading-steps" aria-label="Processing steps">
-      <li id="step-compress">📷 Compressing images...</li>
-      <li id="step-weather">🌤️ Fetching weather data...</li>
-      <li id="step-gemini">🧠 Running Gemini analysis...</li>
-      <li id="step-actions">🚀 Executing actions...</li>
-      <li id="step-done">✅ Complete!</li>
-    </ul>
-  </div>
+    <!-- ═══ TOAST CONTAINER ═══ -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <!-- ═══ TOAST CONTAINER ═══ -->
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
-
-  <!-- ═══ SCRIPTS ═══ -->
-  <script src="/js/accessibility.js"></script>
-  <script src="/js/api.js"></script>
-  <script src="/js/ui.js"></script>
-  <script src="/js/app.js"></script>
-</body>
+    <!-- ═══ SCRIPTS ═══ -->
+    <script src="/js/accessibility.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
 </html>

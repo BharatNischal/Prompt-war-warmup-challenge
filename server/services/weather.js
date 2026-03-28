@@ -25,7 +25,9 @@ export async function getWeatherForecast(lat, lon) {
 
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      console.warn(`⚠️  Weather API returned ${response.status}: ${body.message || response.statusText}`);
+      console.warn(
+        `⚠️  Weather API returned ${response.status}: ${body.message || response.statusText}`,
+      );
       console.warn('   Falling back to demo forecast data.');
       return getDemoForecast(lat, lon);
     }
@@ -78,14 +80,86 @@ function getDemoForecast(lat, lon) {
     country: lat > 0 && lon > 60 ? 'IN' : 'XX',
     isDemoData: true,
     forecast: [
-      { datetime: formatDt(3),  temp: 29.1, feelsLike: 33.2, humidity: 71, description: 'scattered clouds', windSpeed: 6.1,  rainMm: 0,    cloudCover: 45 },
-      { datetime: formatDt(6),  temp: 34.5, feelsLike: 39.8, humidity: 58, description: 'broken clouds',    windSpeed: 7.3,  rainMm: 0,    cloudCover: 68 },
-      { datetime: formatDt(9),  temp: 36.2, feelsLike: 41.1, humidity: 52, description: 'overcast clouds',  windSpeed: 8.9,  rainMm: 0,    cloudCover: 82 },
-      { datetime: formatDt(12), temp: 32.8, feelsLike: 37.4, humidity: 63, description: 'overcast clouds',  windSpeed: 10.2, rainMm: 0.5,  cloudCover: 90 },
-      { datetime: formatDt(24), temp: 27.5, feelsLike: 31.2, humidity: 78, description: 'light rain',       windSpeed: 14.5, rainMm: 4.2,  cloudCover: 95 },
-      { datetime: formatDt(30), temp: 28.1, feelsLike: 32.8, humidity: 85, description: 'moderate rain',    windSpeed: 22.3, rainMm: 18.7, cloudCover: 100 },
-      { datetime: formatDt(36), temp: 25.4, feelsLike: 28.9, humidity: 92, description: 'heavy intensity rain', windSpeed: 35.6, rainMm: 42.5, cloudCover: 100 },
-      { datetime: formatDt(48), temp: 23.2, feelsLike: 26.1, humidity: 96, description: 'heavy intensity rain', windSpeed: 48.2, rainMm: 65.3, cloudCover: 100 },
+      {
+        datetime: formatDt(3),
+        temp: 29.1,
+        feelsLike: 33.2,
+        humidity: 71,
+        description: 'scattered clouds',
+        windSpeed: 6.1,
+        rainMm: 0,
+        cloudCover: 45,
+      },
+      {
+        datetime: formatDt(6),
+        temp: 34.5,
+        feelsLike: 39.8,
+        humidity: 58,
+        description: 'broken clouds',
+        windSpeed: 7.3,
+        rainMm: 0,
+        cloudCover: 68,
+      },
+      {
+        datetime: formatDt(9),
+        temp: 36.2,
+        feelsLike: 41.1,
+        humidity: 52,
+        description: 'overcast clouds',
+        windSpeed: 8.9,
+        rainMm: 0,
+        cloudCover: 82,
+      },
+      {
+        datetime: formatDt(12),
+        temp: 32.8,
+        feelsLike: 37.4,
+        humidity: 63,
+        description: 'overcast clouds',
+        windSpeed: 10.2,
+        rainMm: 0.5,
+        cloudCover: 90,
+      },
+      {
+        datetime: formatDt(24),
+        temp: 27.5,
+        feelsLike: 31.2,
+        humidity: 78,
+        description: 'light rain',
+        windSpeed: 14.5,
+        rainMm: 4.2,
+        cloudCover: 95,
+      },
+      {
+        datetime: formatDt(30),
+        temp: 28.1,
+        feelsLike: 32.8,
+        humidity: 85,
+        description: 'moderate rain',
+        windSpeed: 22.3,
+        rainMm: 18.7,
+        cloudCover: 100,
+      },
+      {
+        datetime: formatDt(36),
+        temp: 25.4,
+        feelsLike: 28.9,
+        humidity: 92,
+        description: 'heavy intensity rain',
+        windSpeed: 35.6,
+        rainMm: 42.5,
+        cloudCover: 100,
+      },
+      {
+        datetime: formatDt(48),
+        temp: 23.2,
+        feelsLike: 26.1,
+        humidity: 96,
+        description: 'heavy intensity rain',
+        windSpeed: 48.2,
+        rainMm: 65.3,
+        cloudCover: 100,
+      },
     ],
   };
 }

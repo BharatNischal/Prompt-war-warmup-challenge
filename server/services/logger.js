@@ -50,7 +50,10 @@ async function writeLog(severity, message, data = {}, requestId = null) {
   } else {
     // Development: structured console output
     const prefix = { INFO: 'ℹ️', WARNING: '⚠️', ERROR: '❌', CRITICAL: '🚨', DEBUG: '🔍' };
-    console.log(`${prefix[severity] || '•'} [${severity}] ${message}`, Object.keys(data).length ? data : '');
+    console.log(
+      `${prefix[severity] || '•'} [${severity}] ${message}`,
+      Object.keys(data).length ? data : '',
+    );
   }
 }
 

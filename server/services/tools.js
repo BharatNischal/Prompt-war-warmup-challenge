@@ -50,7 +50,7 @@ export const toolDeclarations = [
         description:
           'Sends an automated voice call to the farmer in their local language with critical, ' +
           'personalized weather and harvest guidance. Uses Google Cloud Text-to-Speech to generate ' +
-          'audio in the farmer\'s native language. Call this for urgent, time-sensitive alerts ' +
+          "audio in the farmer's native language. Call this for urgent, time-sensitive alerts " +
           'that the farmer needs to act on immediately.',
         parameters: {
           type: 'object',
@@ -67,7 +67,7 @@ export const toolDeclarations = [
               type: 'string',
               description:
                 'The full alert message to be converted to speech. Should be clear, actionable, ' +
-                'and specific to the farmer\'s situation.',
+                "and specific to the farmer's situation.",
             },
             alert_severity: {
               type: 'string',
@@ -149,11 +149,7 @@ async function sendVoiceAlert(args, analysisId) {
   });
 
   // Generate real audio using Google Cloud TTS
-  const ttsResult = await synthesizeSpeech(
-    args.message_text,
-    args.language,
-    analysisId,
-  );
+  const ttsResult = await synthesizeSpeech(args.message_text, args.language, analysisId);
 
   return {
     success: true,

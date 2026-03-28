@@ -55,7 +55,7 @@
     e.preventDefault();
     uploadZone.classList.remove('upload-zone--active');
 
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/'));
     const total = selectedFiles.length + files.length;
 
     if (total > 5) {
@@ -67,7 +67,6 @@
     updateFileList();
     EcoA11y.announce(`${files.length} image(s) added via drag and drop.`);
   });
-
 
   // ── Voice Recording ──────────────────────────────
 
@@ -99,7 +98,7 @@
         voiceBlob = new Blob(chunks, { type: 'audio/webm' });
         voicePreview.src = URL.createObjectURL(voiceBlob);
         voicePreview.style.display = 'block';
-        stream.getTracks().forEach(t => t.stop());
+        stream.getTracks().forEach((t) => t.stop());
         EcoA11y.announce('Voice memo recorded. Preview is available.');
       };
 
@@ -112,7 +111,9 @@
       let seconds = 0;
       recordingTimer = setInterval(() => {
         seconds++;
-        const min = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const min = Math.floor(seconds / 60)
+          .toString()
+          .padStart(2, '0');
         const sec = (seconds % 60).toString().padStart(2, '0');
         voiceTimer.textContent = `${min}:${sec}`;
       }, 1000);
@@ -122,7 +123,6 @@
       EcoUI.showToast('Microphone access denied. Please allow microphone permissions.', 'error');
     }
   });
-
 
   // ── Form Submission ───────────────────────────────
 
@@ -134,7 +134,10 @@
     const cropInfo = document.getElementById('crop-info')?.value?.trim();
 
     if (selectedFiles.length === 0 && !sensorData && !cropInfo && !voiceBlob) {
-      EcoUI.showToast('Please provide at least one input: images, sensor data, crop info, or voice memo.', 'error');
+      EcoUI.showToast(
+        'Please provide at least one input: images, sensor data, crop info, or voice memo.',
+        'error',
+      );
       EcoA11y.announce('Form validation failed. Please provide at least one input.', 'assertive');
       return;
     }
@@ -154,9 +157,7 @@
     const fields = ['latitude', 'longitude', 'cropInfo', 'sensorData', 'phone', 'language'];
     for (const field of fields) {
       const el = document.getElementById(
-        field === 'cropInfo' ? 'crop-info' :
-        field === 'sensorData' ? 'sensor-data' :
-        field
+        field === 'cropInfo' ? 'crop-info' : field === 'sensorData' ? 'sensor-data' : field,
       );
       if (el?.value?.trim()) {
         formData.append(field, el.value.trim());
@@ -197,7 +198,6 @@
 
       EcoUI.showToast('Analysis complete! Scroll down to see results.', 'success');
       EcoA11y.announce('Analysis complete. Results are now displayed below.', 'assertive');
-
     } catch (error) {
       EcoUI.hideLoading();
       EcoUI.showToast(`Analysis failed: ${error.message}`, 'error');
@@ -207,7 +207,6 @@
       analyzeBtn.disabled = false;
     }
   });
-
 
   // ── Render Results ────────────────────────────────
 
@@ -231,7 +230,9 @@
     const audioContainer = document.getElementById('audio-alert-container');
     const alertAudio = document.getElementById('alert-audio');
     if (result.actions) {
-      const voiceAction = result.actions.find(a => a.tool === 'send_voice_alert' && a.result?.audio_url);
+      const voiceAction = result.actions.find(
+        (a) => a.tool === 'send_voice_alert' && a.result?.audio_url,
+      );
       if (voiceAction && audioContainer && alertAudio) {
         alertAudio.src = voiceAction.result.audio_url;
         audioContainer.style.display = 'block';
@@ -250,18 +251,26 @@
     if (!text) return 'MEDIUM';
     const upper = text.toUpperCase();
     if (upper.includes('CRITICAL')) return 'CRITICAL';
-    if (upper.includes('HIGH RISK') || upper.includes('HIGH-RISK') || upper.match(/RISK\s*LEVEL\s*:\s*HIGH/)) return 'HIGH';
-    if (upper.includes('LOW RISK') || upper.includes('LOW-RISK') || upper.match(/RISK\s*LEVEL\s*:\s*LOW/)) return 'LOW';
+    if (
+      upper.includes('HIGH RISK') ||
+      upper.includes('HIGH-RISK') ||
+      upper.match(/RISK\s*LEVEL\s*:\s*HIGH/)
+    )
+      return 'HIGH';
+    if (
+      upper.includes('LOW RISK') ||
+      upper.includes('LOW-RISK') ||
+      upper.match(/RISK\s*LEVEL\s*:\s*LOW/)
+    )
+      return 'LOW';
     return 'MEDIUM';
   }
-
 
   // ── Utility ───────────────────────────────────────
 
   function delay(ms) {
-    return new Promise(r => setTimeout(r, ms));
+    return new Promise((r) => setTimeout(r, ms));
   }
-
 
   // ── Initialize ────────────────────────────────────
 

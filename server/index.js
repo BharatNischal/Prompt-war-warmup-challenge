@@ -16,7 +16,8 @@ const app = express();
 
 // ── Request ID Middleware ────────────────────────────────
 app.use((req, _res, next) => {
-  req.id = req.headers['x-request-id'] || `req-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+  req.id =
+    req.headers['x-request-id'] || `req-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
   next();
 });
 
@@ -28,10 +29,12 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // ── Static Frontend ─────────────────────────────────────
-app.use(express.static(join(__dirname, '..', 'client'), {
-  maxAge: config.nodeEnv === 'production' ? '1d' : 0,
-  etag: true,
-}));
+app.use(
+  express.static(join(__dirname, '..', 'client'), {
+    maxAge: config.nodeEnv === 'production' ? '1d' : 0,
+    etag: true,
+  }),
+);
 
 // ── API Routes ──────────────────────────────────────────
 app.use('/api/health', healthRouter);
@@ -41,12 +44,16 @@ app.use('/api/history', historyRouter);
 
 // ── Error Handler ───────────────────────────────────────
 app.use((err, req, res, _next) => {
-  logger.error('Unhandled error', {
-    error: err.message,
-    code: err.code,
-    statusCode: err.statusCode,
-    path: req.path,
-  }, req.id);
+  logger.error(
+    'Unhandled error',
+    {
+      error: err.message,
+      code: err.code,
+      statusCode: err.statusCode,
+      path: req.path,
+    },
+    req.id,
+  );
 
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(413).json({ error: 'File too large. Maximum size is 5MB.' });
@@ -73,16 +80,16 @@ app.use((err, req, res, _next) => {
 
 // ── Start Server ────────────────────────────────────────
 if (config.nodeEnv !== 'test') {
-app.listen(config.port, () => {
-  logger.info('Eco-Pulse server started', {
-    port: config.port,
-    mode: config.nodeEnv,
-    gcpProject: config.gcpProjectId || 'not configured',
-    gcsBucket: config.gcsBucket || 'not configured',
-    weather: config.weatherApiKey ? 'configured' : 'demo mode',
-  });
+  app.listen(config.port, () => {
+    logger.info('Eco-Pulse server started', {
+      port: config.port,
+      mode: config.nodeEnv,
+      gcpProject: config.gcpProjectId || 'not configured',
+      gcsBucket: config.gcsBucket || 'not configured',
+      weather: config.weatherApiKey ? 'configured' : 'demo mode',
+    });
 
-  console.log(`
+    console.log(`
   ╔═══════════════════════════════════════════════╗
   ║           🌿  E C O - P U L S E  🌿             ║
   ║     Hyper-Local Climate Resilience Engine      ║
@@ -103,7 +110,7 @@ app.listen(config.port, () => {
   ║    • Cloud Logging (Structured Logs)           ║
   ╚═══════════════════════════════════════════════╝
   `);
-});
+  });
 }
 
 export default app;

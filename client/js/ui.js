@@ -4,7 +4,6 @@
  */
 
 const EcoUI = (() => {
-
   /* ── Toast Notifications ──────────────────────────── */
 
   /**
@@ -29,7 +28,6 @@ const EcoUI = (() => {
     }, duration);
   }
 
-
   /* ── Loading Overlay ──────────────────────────────── */
 
   const loadingOverlay = document.getElementById('loading-overlay');
@@ -38,7 +36,7 @@ const EcoUI = (() => {
   function showLoading() {
     loadingOverlay?.classList.add('visible');
     // Reset steps
-    document.querySelectorAll('#loading-steps li').forEach(li => {
+    document.querySelectorAll('#loading-steps li').forEach((li) => {
       li.classList.remove('active', 'done');
     });
     // Trap focus in overlay
@@ -63,7 +61,7 @@ const EcoUI = (() => {
     // Mark all previous steps as done
     const steps = document.querySelectorAll('#loading-steps li');
     let found = false;
-    steps.forEach(li => {
+    steps.forEach((li) => {
       if (li.id === stepId) {
         li.classList.add('active');
         li.classList.remove('done');
@@ -74,7 +72,6 @@ const EcoUI = (() => {
       }
     });
   }
-
 
   /* ── Risk Gauge ───────────────────────────────────── */
 
@@ -88,10 +85,10 @@ const EcoUI = (() => {
     if (!circle || !levelEl) return;
 
     const config = {
-      LOW:      { color: 'var(--success)', percent: '25%', text: 'LOW' },
-      MEDIUM:   { color: 'var(--warning)', percent: '50%', text: 'MEDIUM' },
-      HIGH:     { color: 'var(--danger)',  percent: '75%', text: 'HIGH' },
-      CRITICAL: { color: 'var(--danger)',  percent: '95%', text: 'CRITICAL' },
+      LOW: { color: 'var(--success)', percent: '25%', text: 'LOW' },
+      MEDIUM: { color: 'var(--warning)', percent: '50%', text: 'MEDIUM' },
+      HIGH: { color: 'var(--danger)', percent: '75%', text: 'HIGH' },
+      CRITICAL: { color: 'var(--danger)', percent: '95%', text: 'CRITICAL' },
     };
 
     const c = config[level] || config.MEDIUM;
@@ -100,7 +97,6 @@ const EcoUI = (() => {
     levelEl.textContent = c.text;
     levelEl.style.color = c.color;
   }
-
 
   /* ── Render Actions ───────────────────────────────── */
 
@@ -113,7 +109,8 @@ const EcoUI = (() => {
     if (!container) return;
 
     if (!actions || actions.length === 0) {
-      container.innerHTML = '<p style="color: var(--text-muted); font-size: var(--text-sm);">No automated actions were needed.</p>';
+      container.innerHTML =
+        '<p style="color: var(--text-muted); font-size: var(--text-sm);">No automated actions were needed.</p>';
       return;
     }
 
@@ -156,7 +153,6 @@ const EcoUI = (() => {
     }
   }
 
-
   /* ── Render Weather ───────────────────────────────── */
 
   const weatherIcons = {
@@ -166,14 +162,14 @@ const EcoUI = (() => {
     'broken clouds': '☁️',
     'overcast clouds': '☁️',
     'shower rain': '🌧️',
-    'rain': '🌧️',
+    rain: '🌧️',
     'light rain': '🌦️',
     'moderate rain': '🌧️',
     'heavy intensity rain': '⛈️',
-    'thunderstorm': '⛈️',
-    'snow': '❄️',
-    'mist': '🌫️',
-    'haze': '🌫️',
+    thunderstorm: '⛈️',
+    snow: '❄️',
+    mist: '🌫️',
+    haze: '🌫️',
   };
 
   /**
@@ -185,7 +181,8 @@ const EcoUI = (() => {
     if (!strip) return;
 
     if (!weatherData || !weatherData.available) {
-      strip.innerHTML = '<p style="color: var(--text-muted); font-size: var(--text-sm);">Weather data unavailable</p>';
+      strip.innerHTML =
+        '<p style="color: var(--text-muted); font-size: var(--text-sm);">Weather data unavailable</p>';
       return;
     }
 
@@ -210,7 +207,6 @@ const EcoUI = (() => {
     }
   }
 
-
   /* ── Render Analysis Text ─────────────────────────── */
 
   /**
@@ -229,7 +225,6 @@ const EcoUI = (() => {
     container.innerHTML = formatted;
   }
 
-
   /* ── Show/Hide Results ────────────────────────────── */
 
   function showResults() {
@@ -239,7 +234,6 @@ const EcoUI = (() => {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-
 
   /* ── Upload Previews ──────────────────────────────── */
 
@@ -277,7 +271,6 @@ const EcoUI = (() => {
     });
   }
 
-
   /* ── Helpers ──────────────────────────────────────── */
 
   function escapeHtml(str) {
@@ -286,7 +279,6 @@ const EcoUI = (() => {
     div.textContent = str;
     return div.innerHTML;
   }
-
 
   return {
     showToast,

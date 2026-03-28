@@ -96,8 +96,24 @@ describe('Weather Service', () => {
         location: 'Test City',
         country: 'IN',
         forecast: [
-          { datetime: '2026-03-28 09:00:00', temp: 28, feelsLike: 32, humidity: 70, description: 'clear', windSpeed: 5, rainMm: 0 },
-          { datetime: '2026-03-28 12:00:00', temp: 35, feelsLike: 40, humidity: 50, description: 'clouds', windSpeed: 8, rainMm: 2 },
+          {
+            datetime: '2026-03-28 09:00:00',
+            temp: 28,
+            feelsLike: 32,
+            humidity: 70,
+            description: 'clear',
+            windSpeed: 5,
+            rainMm: 0,
+          },
+          {
+            datetime: '2026-03-28 12:00:00',
+            temp: 35,
+            feelsLike: 40,
+            humidity: 50,
+            description: 'clouds',
+            windSpeed: 8,
+            rainMm: 2,
+          },
         ],
       };
 
