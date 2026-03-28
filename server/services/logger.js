@@ -2,6 +2,8 @@
  * Structured Cloud Logging service for Eco-Pulse.
  * Uses @google-cloud/logging in production, falls back to console in development.
  * Provides severity-leveled, JSON-structured logs with request context.
+ *
+ * @module services/logger
  */
 
 import { Logging } from '@google-cloud/logging';
@@ -23,6 +25,9 @@ if (config.nodeEnv === 'production' && config.gcpProjectId) {
 
 /**
  * Write a structured log entry.
+ * In production with Cloud Logging: writes structured entries to Google Cloud.
+ * In development (or on Cloud Logging failure): writes to console.
+ *
  * @param {'INFO'|'WARNING'|'ERROR'|'CRITICAL'|'DEBUG'} severity
  * @param {string} message - Human-readable message
  * @param {object} [data] - Additional structured data
@@ -57,7 +62,7 @@ async function writeLog(severity, message, data = {}, requestId = null) {
   }
 }
 
-/** @type {import('./logger.js').Logger} */
+/** @type {{ info: Function, warn: Function, error: Function, critical: Function, debug: Function }} */
 const logger = {
   info: (msg, data, reqId) => writeLog('INFO', msg, data, reqId),
   warn: (msg, data, reqId) => writeLog('WARNING', msg, data, reqId),
@@ -67,3 +72,11 @@ const logger = {
 };
 
 export default logger;
+
+/**
+ * Internal setter for testing — allows injecting a mock cloud logger.
+ * @param {object|null} mock - The mock cloud logger (with entry/write methods)
+ */
+export function _setCloudLogger(mock) {
+  cloudLogger = mock;
+}
