@@ -9,6 +9,30 @@ import weatherRouter from './routes/weather.js';
 import analyzeRouter from './routes/analyze.js';
 import historyRouter from './routes/history.js';
 
+// ── Global Error Handlers ───────────────────────────
+// Prevent server crashes from unhandled GCP auth errors
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled promise rejection', {
+    error: reason?.message || String(reason),
+    stack: reason?.stack,
+  });
+});
+
+process.on('uncaughtException', (err) => {
+  // GCP auth errors should not crash the server
+  if (err.message?.includes('Could not load the default credentials')) {
+    logger.warn('GCP credentials not available — GCP features will be unavailable', {
+      error: err.message,
+    });
+    return;
+  }
+  logger.error('Uncaught exception', { error: err.message, stack: err.stack });
+  // For truly fatal errors, exit gracefully
+  if (!err.message?.includes('google') && !err.message?.includes('credentials')) {
+    process.exit(1);
+  }
+});
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
