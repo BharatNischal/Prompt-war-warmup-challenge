@@ -1,0 +1,57 @@
+==================================================
+ FARMER'S HANDWRITTEN LOGBOOK — Transcription
+ Owner: Ramesh Naidu, Plot #3
+ Location: Near Vijayawada, Andhra Pradesh
+ (This simulates OCR output from a messy logbook scan)
+==================================================
+
+----- KHARIF 2024 -----
+Crop: Rice (Sona Masuri)
+Sowed: July 12, 2024
+Harvested: Nov 3, 2024
+Yield: 1,650 kg from 3 acres (avg)
+Price got: ₹38/kg
+Problems: heavy rain mid-sept, 200kg lost to waterlogging
+Total income: ₹55,100 (after deductions)
+
+----- RABI 2024-25 -----
+Crop: Rice (Sona Masuri) 
+Sowed: Dec 5, 2024
+Aborted due to Cyclone Michaung
+Loss: TOTAL - all 3 acres destroyed
+Insurance claim: ₹22,000 (partial, took 4 months)
+Debt increased by ₹80,000
+
+----- KHARIF 2025 -----
+Crop: Rice (Sona Masuri)
+Sowed: June 28, 2025
+Harvested: Oct 20, 2025
+Yield: 1,820 kg (good year!)
+Price: ₹40/kg
+No major weather events
+Total income: ₹72,800
+Paid back ₹45,000 of debt
+
+----- RABI 2025-26 (CURRENT SEASON) -----
+Crop: Rice (Sona Masuri)
+Sowed: Jan 2, 2026
+Today: Day 85 (March 28, 2026)
+Expected harvest: April 8-12
+Fertilizer used: DAP 2 bags, Urea 3 bags, Potash 1 bag
+Pesticide: Chlorpyrifos (once, for stem borers, Feb 15)
+
+Current observations:
+- SW quadrant: 80% grain maturity, golden color
+- NE quadrant: 60-65% maturity, still green
+- Plant height: 95-105cm
+- Panicle length: 22-25cm
+- Some lodging near drainage canal (weak stems)
+
+Financial situation:
+- Investment this season: ₹1,50,000 (seeds + fert + labor)
+- Expected yield: 1,800 kg 
+- Current Sona Masuri price: ₹42/kg
+- Expected revenue: ₹75,600
+- Break-even: ₹1,50,000 (need ALL of it)
+- Outstanding debt: ₹35,000 from 2024 cyclone loss
+- If lose >40% crop = cannot repay = lose land lease

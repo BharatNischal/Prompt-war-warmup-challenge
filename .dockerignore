@@ -1,0 +1,10 @@
+node_modules
+.git
+.env
+tests
+*.md
+coverage
+.DS_Store
+.gitignore
+.dockerignore
+.env.example
