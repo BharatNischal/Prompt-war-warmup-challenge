@@ -1,0 +1,52 @@
+==================================================
+ FIELD SENSOR LOG — Plot #3, Vijayawada District
+ Farmer: Ramesh Naidu
+ Date Range: March 22-28, 2026
+==================================================
+
+--- SOIL MOISTURE SENSOR (SM-400) ---
+readings taken every 6 hours, depth 15cm
+
+03/22 06:00  moisture: 42%  temp_soil: 28.3C
+03/22 12:00  moisture: 38%  temp_soil: 33.7C
+03/22 18:00  moisture: 35%  temp_soil: 31.1C
+03/23 06:00  moisture: 40%  temp_soil: 27.9C
+03/23 12:00  moisture: 34%  temp_soil: 35.2C
+03/23 18:00  moisture: 31%  temp_soil: 32.8C
+03/24 06:00  moisture: 29%  temp_soil: 28.1C  *** LOW WARNING ***
+03/24 12:00  moisture: 25%  temp_soil: 36.4C  *** CRITICAL - irrigation needed ***
+03/24 18:00  moisture: 44%  temp_soil: 30.2C  (irrigated at 15:00)
+03/25 06:00  moisture: 41%  temp_soil: 27.5C
+03/25 12:00  moisture: 37%  temp_soil: 34.8C
+03/25 18:00  moisture: 33%  temp_soil: 31.9C
+03/26 06:00  moisture: 36%  temp_soil: 28.0C
+03/26 12:00  moisture: 32%  temp_soil: 35.5C
+03/26 18:00  moisture: 28%  temp_soil: 33.1C
+03/27 06:00  moisture: 30%  temp_soil: 27.7C
+03/27 12:00  moisture: 26%  temp_soil: 36.9C  *** LOW WARNING ***
+03/27 18:00  moisture: 23%  temp_soil: 34.2C  *** CRITICAL ***
+03/28 06:00  moisture: 21%  temp_soil: 28.8C  *** CRITICAL - needs immediate irrigation ***
+
+--- WEATHER STATION (WS-100) ---
+on-field mounted, 2m height
+
+03/27 avg temp: 33.4C, max: 38.1C, min: 26.2C
+03/27 humidity avg: 62%, wind: 14 km/h NW
+03/27 UV index: 9.2 (extreme)
+03/28 06:00 temp: 29.1C, humidity: 71%, wind: 22 km/h NW (increasing!)
+03/28 barometric pressure: 1004 hPa (DROPPING RAPIDLY)
+
+NOTES: Barometric pressure has dropped 8 hPa in last 24hrs. 
+Wind shifting from NW to NE. Clouds building on horizon.
+Local fishermen say "big storm coming" — they came back early from sea.
+
+--- MANUAL OBSERVATIONS (Ramesh's notes) ---
+- Rice grains turning golden, about 80% mature
+- South-west corner ripening faster (gets more sun)
+- North-east corner still 60-65% mature, needs 10 more days
+- Saw leaf roller insects on 3 plants near irrigation channel
+- Last year lost 2 acres to unexpected cyclone Michaung (Dec 2024)
+- Cannot afford another loss this season
+- Borrowed ₹1,50,000 for seeds and fertilizer
+- Total expected yield: 1,800 kg across 3 acres
+- Current market price: ₹42/kg for Sona Masuri

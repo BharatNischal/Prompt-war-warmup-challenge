@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "analysis": "## 🌾 Eco-Pulse Climate Strategist — Field Analysis Report\n\n**Risk Level: HIGH**\n\n### Crop Assessment\nBased on the uploaded field photos and sensor data:\n- **Crop:** Rice (Sona Masuri), Day 85 of growth cycle\n- **SW Quadrant (2 acres):** Grain maturity at ~80%, panicles turning golden — **ready for immediate harvest**\n- **NE Quadrant (1 acre):** Grain maturity at 60-65%, still green — needs 10-12 more days, but weather window won't allow it\n- **Health Concerns:** Mild lodging near drainage canal; leaf roller insects spotted (localized, non-critical)\n\n### Weather Correlation\n⚠️ **CRITICAL WEATHER ALERT:**\n- Barometric pressure has dropped 8 hPa in 24 hours — classic pre-cyclone pattern\n- Wind speed increasing (22 km/h and rising), shifting NW to NE\n- IMD Cyclone Warning: Severe cyclonic storm expected to make landfall near Machilipatnam (90 km from your plot) within **72-96 hours**\n- Expected rainfall: 150-200mm over 48 hours starting March 30\n- Wind gusts up to 90 km/h\n\n### Recommended Actions (TIME-CRITICAL)\n\n1. **IMMEDIATE (Next 24 hours):** Harvest the SW quadrant (2 acres, ~1,200 kg). This grain is 80% mature and will survive early harvest with minimal quality loss (~5% grade reduction).\n\n2. **URGENT (Next 36 hours):** Harvest whatever is possible from the NE quadrant. Even at 60-65% maturity, partial harvest (~400 kg) is better than total loss.\n\n3. **DO NOT irrigate** — soil moisture is low (21%) but incoming rain will be excessive. Save water resources.\n\n4. **Secure drainage channels** — clear any blockages near the canal to prevent waterlogging (you had 200kg loss from waterlogging in Kharif 2024).\n\n5. **Storage arranged** — I have reserved warehouse space at District Agricultural Cooperative #47 for 1,600 kg.\n\n### Economic Impact\n- **If you act now:** Save ~1,600 kg × ₹42/kg = **₹67,200** (89% of expected revenue)\n- **If you wait:** Risk losing 70-100% of crop = ₹0 revenue against ₹1,50,000 investment\n- **Potential savings from early action: ₹67,200** — enough to cover investment and begin debt repayment\n\n💚 *Your previous loss to Cyclone Michaung will not repeat. Act now.*",
+  "actions": [
+    {
+      "tool": "reserve_warehouse_space",
+      "args": {
+        "crop_type": "rice",
+        "quantity_kg": 1600,
+        "urgency_level": "CRITICAL",
+        "farmer_name": "Ramesh Naidu",
+        "harvest_deadline": "2026-03-29T18:00:00Z"
+      },
+      "result": {
+        "success": true,
+        "confirmation_id": "WH-1774679125562-A7K2P",
+        "warehouse_name": "District Agricultural Cooperative #47",
+        "warehouse_location": "Nearest available storage facility",
+        "reserved_capacity_kg": 1600,
+        "crop_type": "rice",
+        "urgency": "CRITICAL",
+        "estimated_cost_inr": 800,
+        "valid_until": "2026-03-31T06:00:00.000Z",
+        "message": "Space for 1600kg of rice has been reserved at the nearest facility. Confirmation ID: WH-1774679125562-A7K2P"
+      }
+    },
+    {
+      "tool": "send_voice_alert",
+      "args": {
+        "phone_number": "+919876543210",
+        "language": "Telugu",
+        "message_text": "రమేష్ గారు, ఇది ఇకో-పల్స్ క్లైమేట్ అలర్ట్. మీ పొలానికి 72 గంటల్లో తీవ్రమైన తుఫాను రాబోతోంది. దయచేసి వెంటనే దక్షిణ-పడమర భాగంలోని 2 ఎకరాల వరిని కోయండి — ఈ ధాన్యం 80% పక్వానికి చేరింది. గోదాము స్థలం కన్ఫర్మేషన్ WH-A7K2P తో రిజర్వ్ చేయబడింది. రేపు సాయంత్రం లోపల కోత పూర్తి చేయండి. మీ ₹67,200 ఆదాయాన్ని కాపాడుకోండి.",
+        "alert_severity": "CRITICAL"
+      },
+      "result": {
+        "success": true,
+        "call_id": "CALL-1774679125800-B3M9Q",
+        "phone_number": "+919876543210",
+        "language": "Telugu",
+        "alert_severity": "CRITICAL",
+        "message_delivered": "రమేష్ గారు, ఇది ఇకో-పల్స్ క్లైమేట్ అలర్ట్...",
+        "status": "DELIVERED",
+        "timestamp": "2026-03-28T06:25:25.800Z",
+        "message": "Voice alert sent to +919876543210 in Telugu. Call ID: CALL-1774679125800-B3M9Q"
+      }
+    }
+  ],
+  "timestamp": "2026-03-28T06:25:25.562Z",
+  "weather": {
+    "available": true,
+    "location": "Vijayawada",
+    "country": "IN",
+    "forecast": [
+      { "datetime": "2026-03-28 09:00:00", "temp": 29.1, "feelsLike": 33.2, "humidity": 71, "description": "scattered clouds", "windSpeed": 6.1, "rainMm": 0, "cloudCover": 45 },
+      { "datetime": "2026-03-28 12:00:00", "temp": 34.5, "feelsLike": 39.8, "humidity": 58, "description": "broken clouds", "windSpeed": 7.3, "rainMm": 0, "cloudCover": 68 },
+      { "datetime": "2026-03-28 15:00:00", "temp": 36.2, "feelsLike": 41.1, "humidity": 52, "description": "overcast clouds", "windSpeed": 8.9, "rainMm": 0, "cloudCover": 82 },
+      { "datetime": "2026-03-28 18:00:00", "temp": 32.8, "feelsLike": 37.4, "humidity": 63, "description": "overcast clouds", "windSpeed": 10.2, "rainMm": 0.5, "cloudCover": 90 },
+      { "datetime": "2026-03-29 06:00:00", "temp": 27.5, "feelsLike": 31.2, "humidity": 78, "description": "light rain", "windSpeed": 14.5, "rainMm": 4.2, "cloudCover": 95 },
+      { "datetime": "2026-03-29 12:00:00", "temp": 28.1, "feelsLike": 32.8, "humidity": 85, "description": "moderate rain", "windSpeed": 22.3, "rainMm": 18.7, "cloudCover": 100 },
+      { "datetime": "2026-03-29 18:00:00", "temp": 25.4, "feelsLike": 28.9, "humidity": 92, "description": "heavy intensity rain", "windSpeed": 35.6, "rainMm": 42.5, "cloudCover": 100 },
+      { "datetime": "2026-03-30 06:00:00", "temp": 23.2, "feelsLike": 26.1, "humidity": 96, "description": "heavy intensity rain", "windSpeed": 48.2, "rainMm": 65.3, "cloudCover": 100 }
+    ]
+  },
+  "inputSummary": {
+    "imagesProcessed": 2,
+    "hasLocation": true,
+    "hasSensorData": true,
+    "hasCropInfo": true
+  }
+}
