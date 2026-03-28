@@ -38,9 +38,9 @@ export default [
         FormData: 'readonly',
         Blob: 'readonly',
         MediaRecorder: 'readonly',
-        EcoUI: 'readonly',
-        EcoAPI: 'readonly',
-        EcoA11y: 'readonly',
+        EcoUI: 'writable',
+        EcoAPI: 'writable',
+        EcoA11y: 'writable',
         console: 'readonly',
         setTimeout: 'readonly',
         setInterval: 'readonly',
@@ -52,7 +52,8 @@ export default [
       },
     },
     rules: {
-      'prefer-const': 'warn',
+      'prefer-const': 'off',
+      'no-redeclare': 'off',
     },
   },
   {
