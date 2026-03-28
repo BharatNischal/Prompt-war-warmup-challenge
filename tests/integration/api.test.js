@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import request from 'supertest';
 
-// Mock all GCP services before importing app
+// Full GCP mocks
 vi.mock('dotenv/config', () => ({}));
 
 vi.mock('@google-cloud/logging', () => ({
@@ -27,7 +27,7 @@ vi.mock('@google-cloud/storage', () => ({
 vi.mock('@google-cloud/text-to-speech', () => ({
   default: {
     TextToSpeechClient: vi.fn().mockImplementation(() => ({
-      synthesizeSpeech: vi.fn().mockResolvedValue([{ audioContent: Buffer.from('fake-audio') }]),
+      synthesizeSpeech: vi.fn().mockResolvedValue([{ audioContent: Buffer.from('fake') }]),
     })),
   },
   TextToSpeechClient: vi.fn(),
@@ -37,15 +37,15 @@ vi.mock('@google-cloud/speech', () => ({
   default: {
     SpeechClient: vi.fn().mockImplementation(() => ({
       recognize: vi.fn().mockResolvedValue([{
-        results: [{ alternatives: [{ transcript: 'test transcript', confidence: 0.95 }] }],
+        results: [{ alternatives: [{ transcript: 'test', confidence: 0.9 }] }],
       }]),
     })),
   },
   SpeechClient: vi.fn(),
 }));
 
-vi.mock('@google-cloud/firestore', () => ({
-  Firestore: vi.fn().mockImplementation(() => ({
+vi.mock('@google-cloud/firestore', () => {
+  const MockFirestore = vi.fn().mockImplementation(() => ({
     collection: vi.fn().mockReturnValue({
       add: vi.fn().mockResolvedValue({ id: 'test-doc' }),
       orderBy: vi.fn().mockReturnThis(),
@@ -55,27 +55,29 @@ vi.mock('@google-cloud/firestore', () => ({
         get: vi.fn().mockResolvedValue({ exists: false }),
       }),
     }),
-  })),
-}));
+  }));
+  MockFirestore.FieldValue = {
+    serverTimestamp: vi.fn().mockReturnValue('SERVER_TIMESTAMP'),
+  };
+  return { Firestore: MockFirestore };
+});
 
 vi.mock('@google/genai', () => ({
   GoogleGenAI: vi.fn().mockImplementation(() => ({
     models: {
       generateContent: vi.fn().mockResolvedValue({
-        text: 'Mock analysis: Risk Level: MEDIUM. Your crop is at moderate risk.',
+        text: 'Mock analysis: Risk Level: HIGH. Urgent action needed.',
         functionCalls: null,
-        candidates: [{ content: { parts: [{ text: 'mock' }] } }],
       }),
     },
   })),
 }));
 
-// Set env before importing config
 process.env.GEMINI_API_KEY = 'test-key-for-integration';
 process.env.NODE_ENV = 'test';
 process.env.GCP_PROJECT_ID = '';
 process.env.GCS_BUCKET = '';
-process.env.PORT = '0'; // Random port to avoid EADDRINUSE
+process.env.PORT = '0';
 
 let app;
 beforeAll(async () => {
@@ -93,6 +95,11 @@ describe('API Integration Tests', () => {
       expect(res.body.version).toBe('1.0.0');
       expect(res.body.timestamp).toBeDefined();
     });
+
+    it('returns proper content type', async () => {
+      const res = await request(app).get('/api/health');
+      expect(res.headers['content-type']).toContain('application/json');
+    });
   });
 
   describe('GET /api/weather', () => {
@@ -106,6 +113,11 @@ describe('API Integration Tests', () => {
       const res = await request(app).get('/api/weather?lat=999&lon=80');
       expect(res.status).toBe(400);
       expect(res.body.error).toContain('Invalid');
+    });
+
+    it('returns 400 for invalid longitude', async () => {
+      const res = await request(app).get('/api/weather?lat=16.5&lon=999');
+      expect(res.status).toBe(400);
     });
 
     it('returns forecast for valid coordinates', async () => {
@@ -130,6 +142,19 @@ describe('API Integration Tests', () => {
       expect(res.body.analysis).toBeDefined();
       expect(res.body.analysisId).toBeDefined();
       expect(res.body.inputSummary).toBeDefined();
+      expect(res.body.inputSummary.hasLocation).toBe(true);
+      expect(res.body.inputSummary.hasSensorData).toBe(true);
+      expect(res.body.inputSummary.hasCropInfo).toBe(true);
+    });
+
+    it('processes analysis without coordinates', async () => {
+      const res = await request(app)
+        .post('/api/analyze')
+        .field('cropInfo', 'Wheat, 5 acres');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.inputSummary.hasLocation).toBe(false);
     });
 
     it('returns 400 for invalid coordinates', async () => {
@@ -150,6 +175,15 @@ describe('API Integration Tests', () => {
 
       expect(res.status).toBe(400);
     });
+
+    it('includes voice transcript info in response', async () => {
+      const res = await request(app)
+        .post('/api/analyze')
+        .field('cropInfo', 'Rice, rain damage');
+
+      expect(res.status).toBe(200);
+      expect(res.body.inputSummary.hasVoiceNote).toBe(false);
+    });
   });
 
   describe('GET /api/history', () => {
@@ -160,16 +194,45 @@ describe('API Integration Tests', () => {
       expect(Array.isArray(res.body.analyses)).toBe(true);
     });
 
+    it('accepts limit parameter', async () => {
+      const res = await request(app).get('/api/history?limit=5');
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+    });
+
+    it('accepts location filter parameters', async () => {
+      const res = await request(app).get('/api/history?lat=16.5&lon=80.6');
+      expect(res.status).toBe(200);
+    });
+
     it('returns 404 for non-existent analysis', async () => {
       const res = await request(app).get('/api/history/nonexistent-id-12345');
       expect(res.status).toBe(404);
     });
+
+    it('returns 400 for invalid (too short) analysis ID', async () => {
+      const res = await request(app).get('/api/history/ab');
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('Static Files', () => {
+    it('serves the frontend HTML', async () => {
+      const res = await request(app).get('/');
+      expect(res.status).toBe(200);
+      expect(res.headers['content-type']).toContain('text/html');
+    });
   });
 
   describe('Error Handling', () => {
-    it('returns 404 for unknown routes', async () => {
+    it('returns 404 for unknown API routes', async () => {
       const res = await request(app).get('/api/nonexistent');
       expect(res.status).toBe(404);
+    });
+
+    it('returns proper error format', async () => {
+      const res = await request(app).get('/api/weather');
+      expect(res.body).toHaveProperty('error');
     });
   });
 });
